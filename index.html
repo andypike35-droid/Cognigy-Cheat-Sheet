@@ -325,7 +325,7 @@ tr:nth-child(even) td{background:#f8fafc}
     NiCE CXone-specific handover, routing and ownership guidance is currently available.
   </div>
 </div>
-<div class="eyebrow">1.1 · Platform overview</div><h2 id="providerPlatformTitle">Where Cognigy fits</h2><p class="lead" id="providerPlatformLead">Cognigy is the AI orchestration layer within the NiCE CXone ecosystem, connecting customer channels, AI Agents and Enterprise’s enterprise services.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy sits between customer channels and enterprise systems as the AI orchestration layer.</li><li>The selected CCaaS platform continues to own routing, queues, recording and agent delivery.</li><li>Enterprise systems remain the source of truth for customer and business data.</li><li>Cognigy coordinates AI, knowledge and approved tools, then hands context back to a live agent when needed.</li><li>The objective is to enhance the existing estate rather than replace it.</li></ul></div><div aria-label="Cognigy architecture overview" class="visual-diagram">
+<div class="eyebrow">1.1 · Platform overview</div><h2 id="providerPlatformTitle">Where Cognigy fits</h2><p class="lead" id="providerPlatformLead">Cognigy is the AI orchestration layer within the NiCE CXone ecosystem, connecting customer channels, AI Agents and enterprise services.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul id="providerPresenterCheat"><li>NiCE CXone and Cognigy are part of the same NiCE portfolio, enabling a more unified AI and contact-centre proposition.</li><li>Customers can combine Cognigy AI Agents with CXone routing, digital and voice operations, NiCE Knowledge Hub and NiCE-native Copilot experiences.</li><li>Cognigy provides AI orchestration, knowledge grounding and approved business tools; CXone provides channel operations, skills, routing, recording and agent delivery.</li><li>Integrated deployment and handover patterns can reduce configuration effort and improve transcript, context and lifecycle continuity.</li><li>Enterprise systems remain the source of truth for customer and business data.</li></ul></div><div aria-label="Cognigy architecture overview" class="visual-diagram">
 <svg role="img" viewbox="0 0 1180 600">
 <defs>
 <marker id="a1" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#173f66"></path></marker>
@@ -365,7 +365,7 @@ tr:nth-child(even) td{background:#f8fafc}
 <rect fill="#f8fbff" height="58" rx="14" stroke="#cbd9e6" width="570" x="305" y="485"></rect>
 <text class="svg-label" text-anchor="middle" x="590" y="510">Secure HTTPS / REST APIs</text>
 <text class="svg-small" text-anchor="middle" x="590" y="532">Authentication · authorisation · audit · data minimisation</text>
-</svg></div><div class="quote">“Cognigy provides the automated AI experience and controlled orchestration; NiCE CXone continues to provide contact-centre routing, skills and human-agent delivery.”</div><div class="grid"><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI orchestration</li><li>AI Agents and knowledge</li><li>Tool and API execution</li><li>Guardrails and analytics</li></ul></div>
+</svg></div><div class="quote" id="providerQuote">“NiCE CXone and Cognigy form a connected NiCE proposition: Cognigy powers the automated AI experience, while CXone provides the surrounding contact-centre, knowledge, Copilot and human-agent capabilities.”</div><div class="grid"><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI orchestration</li><li>AI Agents and knowledge</li><li>Tool and API execution</li><li>Guardrails and analytics</li></ul></div>
 <div class="card" id="providerSummaryCard">
 <h4 id="providerSummaryTitle">NiCE CXone</h4>
 <ul class="cheat" id="providerSummaryList">
@@ -375,7 +375,7 @@ tr:nth-child(even) td{background:#f8fafc}
 <li>Routes the interaction to the appropriate CXone skill and agent</li>
 </ul>
 </div>
-<div class="card"><h4>NiCE CXone / channel platform</h4><ul class="cheat"><li>Voice and digital channel entry</li><li>Routing and queues</li><li>Recording and agent desktop</li><li>Live-agent delivery</li></ul></div><div class="card"><h4>Enterprise</h4><ul class="cheat"><li>Systems of record</li><li>Identity and API policy</li><li>Business rules and data</li><li>Retention requirements</li></ul></div></div><div class="section-faq"><h3>Common questions</h3><details><summary>Does Cognigy replace the contact-centre platform?</summary><div class="answer">No. The CCaaS platform continues to own channels, routing, queues and agent delivery. Cognigy provides the AI orchestration layer.</div></details><details><summary>Does Cognigy replace our CRM or policy platform?</summary><div class="answer">No. Enterprise systems remain the systems of record and are accessed through approved integrations.</div></details><details><summary>Can the same AI Agent be reused across channels?</summary><div class="answer">Yes. Core logic, knowledge and tools can be reused, while channel-specific presentation and routing remain configurable.</div></details></div></section><section class="page" id="component-architecture"><div class="eyebrow">1.2 · Component architecture</div><h2>How Cognigy fits across the wider ecosystem</h2><p class="lead">A single view of channels, CCaaS, Cognigy, AI services, tools and enterprise systems.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is the central orchestration layer connecting channels, AI models, tools and enterprise systems.</li><li>It is model agnostic, so providers can be changed without redesigning the whole application.</li><li>REST APIs, MCP servers, RAG services and custom tools can all be orchestrated by the same AI Agent.</li><li>Channels and backend systems remain decoupled, making the architecture easier to evolve.</li><li>This provides flexibility today while reducing future migration effort.</li></ul></div><div class="visual-tabs"><span class="visual-tab">Channels</span><span class="visual-tab" id="componentCcaasTab">NiCE CXone</span><span class="visual-tab">Cognigy</span><span class="visual-tab">MCP &amp; AI Tools</span><span class="visual-tab">LLM / Speech</span><span class="visual-tab">Enterprise Systems</span></div><div class="image-frame"><img alt="Cognigy AI orchestration component architecture showing customer channels, MCP and AI tools, model and speech providers, and enterprise systems" class="arch-image" src="images/component-architecture.png"/><div class="image-caption">Use this as the main component view: Cognigy sits at the centre, orchestrating channels, AI services, tools and enterprise systems without replacing them.</div></div><div class="grid"><div class="card"><h4>Channels</h4><ul class="cheat"><li>Voice, web, messaging and mobile</li><li>Typically owned by the selected CCaaS or channel platform</li></ul></div><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI Agents and orchestration</li><li>Knowledge, tools, guardrails and analytics</li></ul></div><div class="card"><h4>Enterprise systems</h4><ul class="cheat"><li>CRM, policy, claims and payments</li><li>Remain the systems of record</li></ul></div><div class="card"><h4>AI services</h4><ul class="cheat"><li>LLM and speech providers</li><li>Provider-agnostic and selected by architecture</li></ul></div></div><div class="quote">“Cognigy connects the existing estate into a controlled, reusable AI orchestration layer.”</div><div class="section-faq"><h3>Common questions</h3><details><summary>Can we use different LLM or speech providers?</summary><div class="answer">Yes. Cognigy is provider-agnostic and can orchestrate approved LLM and speech services.</div></details><details><summary>Can Cognigy use REST APIs, MCP and custom tools together?</summary><div class="answer">Yes. These can be exposed as governed tools within the same orchestration layer.</div></details><details><summary>Do enterprise systems need to change?</summary><div class="answer">Not necessarily. Cognigy is designed to integrate with the existing estate through approved interfaces.</div></details></div></section><section class="page" id="hosting-platform">
+<div class="card"><h4 id="providerPlatformCardTitle">NiCE CXone ecosystem</h4><ul class="cheat" id="providerPlatformCardList"><li>Voice and digital channel entry</li><li>Routing, skills, queues and recording</li><li>NiCE Knowledge Hub and Knowledge Management integration</li><li>NiCE-native Copilot experiences powered by Cognigy</li></ul></div><div class="card"><h4>Enterprise</h4><ul class="cheat"><li>Systems of record</li><li>Identity and API policy</li><li>Business rules and data</li><li>Retention requirements</li></ul></div></div><div class="section-faq"><h3>Common questions</h3><details><summary>Does Cognigy replace the contact-centre platform?</summary><div class="answer">No. The CCaaS platform continues to own channels, routing, queues and agent delivery. Cognigy provides the AI orchestration layer.</div></details><details><summary>Does Cognigy replace our CRM or policy platform?</summary><div class="answer">No. Enterprise systems remain the systems of record and are accessed through approved integrations.</div></details><details><summary>Can the same AI Agent be reused across channels?</summary><div class="answer">Yes. Core logic, knowledge and tools can be reused, while channel-specific presentation and routing remain configurable.</div></details></div></section><section class="page" id="component-architecture"><div class="eyebrow">1.2 · Component architecture</div><h2>How Cognigy fits across the wider ecosystem</h2><p class="lead">A single view of channels, CCaaS, Cognigy, AI services, tools and enterprise systems.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is the central orchestration layer connecting channels, AI models, tools and enterprise systems.</li><li>It is model agnostic, so providers can be changed without redesigning the whole application.</li><li>REST APIs, MCP servers, RAG services and custom tools can all be orchestrated by the same AI Agent.</li><li>Channels and backend systems remain decoupled, making the architecture easier to evolve.</li><li>This provides flexibility today while reducing future migration effort.</li></ul></div><div class="visual-tabs"><span class="visual-tab">Channels</span><span class="visual-tab" id="componentCcaasTab">NiCE CXone</span><span class="visual-tab">Cognigy</span><span class="visual-tab">MCP &amp; AI Tools</span><span class="visual-tab">LLM / Speech</span><span class="visual-tab">Enterprise Systems</span></div><div class="image-frame"><img alt="Cognigy AI orchestration component architecture showing customer channels, MCP and AI tools, model and speech providers, and enterprise systems" class="arch-image" src="images/component-architecture.png"/><div class="image-caption">Use this as the main component view: Cognigy sits at the centre, orchestrating channels, AI services, tools and enterprise systems without replacing them.</div></div><div class="grid"><div class="card"><h4>Channels</h4><ul class="cheat"><li>Voice, web, messaging and mobile</li><li>Typically owned by the selected CCaaS or channel platform</li></ul></div><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI Agents and orchestration</li><li>Knowledge, tools, guardrails and analytics</li></ul></div><div class="card"><h4>Enterprise systems</h4><ul class="cheat"><li>CRM, policy, claims and payments</li><li>Remain the systems of record</li></ul></div><div class="card"><h4>AI services</h4><ul class="cheat"><li>LLM and speech providers</li><li>Provider-agnostic and selected by architecture</li></ul></div></div><div class="quote">“Cognigy connects the existing estate into a controlled, reusable AI orchestration layer.”</div><div class="section-faq"><h3>Common questions</h3><details><summary>Can we use different LLM or speech providers?</summary><div class="answer">Yes. Cognigy is provider-agnostic and can orchestrate approved LLM and speech services.</div></details><details><summary>Can Cognigy use REST APIs, MCP and custom tools together?</summary><div class="answer">Yes. These can be exposed as governed tools within the same orchestration layer.</div></details><details><summary>Do enterprise systems need to change?</summary><div class="answer">Not necessarily. Cognigy is designed to integrate with the existing estate through approved interfaces.</div></details></div></section><section class="page" id="hosting-platform">
 <div class="eyebrow">1.3 · Hosting, resilience &amp; data residency</div>
 <h2 id="hostingPageTitle">How Cognigy is hosted in the United Kingdom</h2>
 <p class="section-kicker" id="hostingPageKicker">Select a deployment location to view the relevant regional architecture, resilience and data-residency guidance.</p>
@@ -1410,7 +1410,22 @@ const ccaasProviders = {
     detailType: "genesys",
     note: "Genesys-specific digital, voice, routing and ownership guidance is currently available.",
     platformTitle: "Where Cognigy fits with Genesys Cloud",
-    platformLead: "Cognigy sits between Genesys-managed customer channels and enterprise systems as the AI orchestration layer.",
+    platformLead: "Cognigy is integrated into the Genesys Cloud estate as the external AI automation and orchestration platform. The wider Genesys product stack remains Genesys-owned and operated.",
+    presenterCheat: [
+      "Cognigy provides the AI Agent, orchestration, knowledge grounding and approved business tools.",
+      "Genesys Cloud continues to provide channels, Architect, routing, queues, recording and the agent experience.",
+      "This is an interoperability proposition: Cognigy is being added to the customer’s Genesys environment rather than forming a shared product suite.",
+      "Do not position NiCE Knowledge Hub, NiCE-native Copilot or other CXone portfolio capabilities as part of the Genesys integration.",
+      "Integration scope is limited to the supported Cognigy-to-Genesys digital, voice and handover patterns described in this guide."
+    ],
+    quote: "Cognigy adds enterprise AI automation to Genesys Cloud; Genesys continues to own the surrounding contact-centre platform and agent experience.",
+    platformCardTitle: "Genesys Cloud platform",
+    platformCardBullets: [
+      "Voice and digital channel entry",
+      "Architect, routing, queues and recording",
+      "Genesys agent desktop and workforce services",
+      "Supported Cognigy handover and context integration"
+    ],
     bullets: [
       "Owns voice and digital channel entry",
       "Provides Architect, routing, queues and agent delivery",
@@ -1427,7 +1442,22 @@ const ccaasProviders = {
     detailType: "cxone",
     note: "CXone-specific integrated and non-integrated human handover guidance is available.",
     platformTitle: "Where Cognigy fits within NiCE CXone",
-    platformLead: "Cognigy provides the automated AI interaction and orchestration layer, while NiCE CXone provides channel operations, skills, routing and human-agent delivery.",
+    platformLead: "Cognigy is part of the NiCE portfolio and provides the AI Agent and orchestration layer within a broader CXone proposition spanning channels, routing, knowledge, Copilot and human-agent operations.",
+    presenterCheat: [
+      "NiCE CXone and Cognigy are part of the same NiCE portfolio, enabling a more unified AI and contact-centre proposition.",
+      "Customers can combine Cognigy AI Agents with CXone routing, digital and voice operations, NiCE Knowledge Hub and NiCE-native Copilot experiences.",
+      "Cognigy provides AI orchestration, knowledge grounding and approved business tools; CXone provides channel operations, skills, routing, recording and agent delivery.",
+      "Integrated deployment and handover patterns can reduce configuration effort and improve transcript, context and lifecycle continuity.",
+      "Enterprise systems remain the source of truth for customer and business data."
+    ],
+    quote: "NiCE CXone and Cognigy form a connected NiCE proposition: Cognigy powers the automated AI experience, while CXone provides the surrounding contact-centre, knowledge, Copilot and human-agent capabilities.",
+    platformCardTitle: "NiCE CXone ecosystem",
+    platformCardBullets: [
+      "Voice and digital channel entry",
+      "Routing, skills, queues and recording",
+      "NiCE Knowledge Hub and Knowledge Management integration",
+      "NiCE-native Copilot experiences powered by Cognigy"
+    ],
     bullets: [
       "Supports integrated and non-integrated CXone handover patterns",
       "Uses the Handover to Human Agent Node for escalation",
@@ -1532,6 +1562,10 @@ function updateCcaasProvider(providerKey) {
   const bannerText = document.getElementById("providerBannerText");
   const genericDiagramProvider = document.getElementById("genericDiagramProvider");
   const genericGuidance = document.getElementById("genericProviderGuidance");
+  const presenterCheat = document.getElementById("providerPresenterCheat");
+  const providerQuote = document.getElementById("providerQuote");
+  const platformCardTitle = document.getElementById("providerPlatformCardTitle");
+  const platformCardList = document.getElementById("providerPlatformCardList");
 
   status.textContent = provider.status;
   status.classList.toggle("generic", !provider.customised);
@@ -1540,6 +1574,22 @@ function updateCcaasProvider(providerKey) {
   platformLead.textContent = provider.platformLead;
   summaryTitle.textContent = provider.name;
   summaryList.innerHTML = provider.bullets.map(item => `<li>${item}</li>`).join("");
+  const defaultPresenter = [
+    `Cognigy provides the automated AI interaction and orchestration alongside ${provider.name}.`,
+    `${provider.name} continues to own its channels, routing, queues, recording and agent experience.`,
+    "Enterprise systems remain the source of truth for customer and business data.",
+    "Only capabilities explicitly included in the selected provider integration should be presented as available.",
+    "Detailed voice, digital and handover behaviour must be validated during solution design."
+  ];
+  presenterCheat.innerHTML = (provider.presenterCheat || defaultPresenter).map(item => `<li>${item}</li>`).join("");
+  providerQuote.textContent = `“${provider.quote || `Cognigy adds enterprise AI automation alongside ${provider.name}, while the selected CCaaS platform continues to provide contact-centre operations and agent delivery.`}”`;
+  platformCardTitle.textContent = provider.platformCardTitle || `${provider.name} platform`;
+  platformCardList.innerHTML = (provider.platformCardBullets || [
+    "Voice and digital channel entry",
+    "Routing, queues and recording",
+    "Agent desktop and live-agent delivery",
+    "Provider-specific integration subject to validation"
+  ]).map(item => `<li>${item}</li>`).join("");
   integrationTitle.textContent = provider.integrationTitle;
   bannerTitle.textContent = provider.integrationTitle;
   bannerText.textContent = provider.integrationText;
