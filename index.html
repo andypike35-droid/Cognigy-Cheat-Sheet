@@ -1006,7 +1006,6 @@ tr:nth-child(even) td{background:#f8fafc}
 <div class="eyebrow">6.1 · Cognigy Knowledge AI</div>
 <h2>Ground AI Agents in approved enterprise knowledge</h2>
 <p class="section-kicker">A practical cheat sheet explaining what Cognigy Knowledge AI is, how Retrieval-Augmented Generation works and how an AI Agent uses the correct knowledge for each job.</p>
-
 <div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul>
 <li><strong>Knowledge AI is Cognigy’s native RAG capability:</strong> it retrieves relevant information from approved content before an LLM generates the answer.</li>
 <li>Content is organised as <strong>Knowledge Store → Knowledge Source → Knowledge Chunk</strong>.</li>
@@ -1014,7 +1013,6 @@ tr:nth-child(even) td{background:#f8fafc}
 <li><strong>AI Agent Knowledge</strong> is reusable knowledge associated with the overall AI Agent. <strong>Job Knowledge</strong> is selected for one specific AI Agent Node and task.</li>
 <li>Use separate Stores, Source Tags and clearly described Knowledge Tools so the Agent searches only the content relevant to the current use case.</li>
 </ul></div>
-
 <div class="section-banner"><strong>What is RAG?</strong><span>Retrieval-Augmented Generation combines enterprise search with an LLM-generated response.</span></div>
 <div class="visual-diagram"><svg aria-label="Retrieval-Augmented Generation workflow" role="img" viewbox="0 0 1120 300"><defs><marker id="ragArrow" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#173f66"></path></marker></defs>
 <rect class="svg-box-blue" height="135" rx="16" width="185" x="20" y="82"></rect><text class="svg-title" text-anchor="middle" x="112" y="122">Approved Content</text><text class="svg-sub" text-anchor="middle" x="112" y="157">Files, pages</text><text class="svg-sub" text-anchor="middle" x="112" y="185">or connectors</text>
@@ -1024,7 +1022,6 @@ tr:nth-child(even) td{background:#f8fafc}
 <rect class="svg-box-blue" height="135" rx="16" width="125" x="980" y="82"></rect><text class="svg-title" text-anchor="middle" x="1042" y="126">Answer</text><text class="svg-sub" text-anchor="middle" x="1042" y="160">Relevant</text><text class="svg-sub" text-anchor="middle" x="1042" y="186">and contextual</text>
 <path d="M205 150 H245" marker-end="url(#ragArrow)" stroke="#173f66" stroke-width="3"></path><path d="M455 150 H495" marker-end="url(#ragArrow)" stroke="#173f66" stroke-width="3"></path><path d="M705 150 H745" marker-end="url(#ragArrow)" stroke="#173f66" stroke-width="3"></path><path d="M955 150 H975" marker-end="url(#ragArrow)" stroke="#173f66" stroke-width="3"></path>
 </svg></div>
-
 <div class="compact-grid">
 <div class="mini-card"><h4>1. Ingestion</h4><p>Approved content is uploaded or imported into a Knowledge Store.</p></div>
 <div class="mini-card"><h4>2. Chunking</h4><p>Documents are divided into smaller, searchable Knowledge Chunks.</p></div>
@@ -1032,15 +1029,13 @@ tr:nth-child(even) td{background:#f8fafc}
 <div class="mini-card"><h4>4. Retrieval</h4><p>The user’s request is matched against the most relevant chunks, optionally filtered by Store or Source Tags.</p></div>
 <div class="mini-card"><h4>5. Generation</h4><p>The LLM receives the retrieved evidence and generates a response within the Agent’s instructions and guardrails.</p></div>
 </div>
-
 <h3>Knowledge structure</h3>
-<div class="image-frame"><img alt="Cognigy Knowledge AI hierarchy showing Knowledge Store, Knowledge Source and Knowledge Chunk" class="arch-image" src="images/knowledge-ai-hierarchy.png"/><div class="image-caption">Add <code>knowledge-ai-hierarchy.png</code> to the repository’s <code>images</code> folder. The hierarchy keeps content organised and makes retrieval easier to govern.</div></div>
+<div class="image-frame"><img alt="Cognigy Knowledge AI hierarchy showing Knowledge Store, Knowledge Source and Knowledge Chunk" class="arch-image" src="images/knowledge-ai-hierarchy.png"/><div class="image-caption">Cognigy Knowledge AI organises approved content into Knowledge Stores, Knowledge Sources and Knowledge Chunks so retrieval can be governed and targeted to the correct use case.</div></div>
 <div class="grid">
 <div class="card"><h4>Knowledge Store</h4><p>A logical collection of related content within a Cognigy Project, such as Retail Banking, Insurance Claims or Employee Support.</p></div>
 <div class="card"><h4>Knowledge Source</h4><p>A document, webpage or imported source. Metadata and Source Tags can identify its title, URL, audience, product or region.</p></div>
 <div class="card"><h4>Knowledge Chunk</h4><p>A small, self-contained unit retrieved at run time. Good chunking improves relevance and reduces unnecessary context.</p></div>
 </div>
-
 <h3>Supported source types</h3>
 <table class="compare-table"><thead><tr><th>Source</th><th>Use it for</th><th>Cheat-sheet note</th></tr></thead><tbody>
 <tr><td><strong>CTXT</strong></td><td>Curated FAQs, policies and content requiring precise chunk boundaries or metadata.</td><td>Cognigy’s recommended structured format where maximum control is required.</td></tr>
@@ -1051,20 +1046,17 @@ tr:nth-child(even) td{background:#f8fafc}
 <tr><td><strong>Knowledge Connector</strong></td><td>External repositories, document libraries, databases or help centres.</td><td>Imports content into Cognigy Knowledge AI and can support scheduled synchronisation.</td></tr>
 </tbody></table>
 <div class="callout"><strong>Common limit:</strong> an individual file uploaded as a Knowledge Source can be up to 10 MB. Check current licensing, quotas and release-specific limits during solution design.</div>
-
 <h3>How the AI Agent uses knowledge</h3>
 <div class="crm-product-grid">
 <div class="crm-product-card"><h4>AI Agent Knowledge</h4><p>Knowledge associated with the reusable AI Agent persona. Use this for information the Agent may need across several jobs.</p><ul class="cheat"><li>Company-wide service information</li><li>Common terminology and policies</li><li>Reusable product knowledge</li><li>Enabled through <strong>Use AI Agent Knowledge</strong></li></ul></div>
 <div class="crm-product-card"><h4>Job Knowledge</h4><p>Knowledge configured for one AI Agent Node and its specific job. Use this when a task needs a narrower or different evidence set.</p><ul class="cheat"><li>Claims knowledge for a Claims job</li><li>Collections policy for a Collections job</li><li>Internal procedures for an Employee Support job</li><li>Enabled through <strong>Use Job Knowledge</strong></li></ul></div>
 </div>
-
 <div class="section-banner"><strong>Knowledge injection options</strong><span>Control when Cognigy queries the selected Knowledge Stores.</span></div>
 <table class="compare-table"><thead><tr><th>Setting</th><th>Behaviour</th><th>Use when</th></tr></thead><tbody>
 <tr><td><strong>Never</strong></td><td>The job does not query Knowledge AI.</td><td>The task is deterministic, tool-led or does not require knowledge.</td></tr>
 <tr><td><strong>When Required</strong></td><td>The AI Agent decides when a knowledge query is needed.</td><td>Knowledge is useful for some requests but not every conversational turn.</td></tr>
 <tr><td><strong>Once for Each User Input</strong></td><td>Knowledge is queried after every user message.</td><td>Nearly every turn depends on retrieved evidence; account for additional latency and query consumption.</td></tr>
 </tbody></table>
-
 <h3>Use the right knowledge for the right use case</h3>
 <div class="integration-step-list">
 <div class="integration-step"><div class="integration-step-number">1</div><div><h4>Separate broad and specialist knowledge</h4><p>Keep reusable company information at AI Agent level and attach specialist Stores to the relevant job.</p></div></div>
@@ -1073,9 +1065,7 @@ tr:nth-child(even) td{background:#f8fafc}
 <div class="integration-step"><div class="integration-step-number">4</div><div><h4>Do not use knowledge for transactional truth</h4><p>Use Knowledge AI for approved explanatory content. Retrieve live balances, claim status and customer-specific data through governed tools and systems of record.</p></div></div>
 <div class="integration-step"><div class="integration-step-number">5</div><div><h4>Test retrieval, not only the final wording</h4><p>Inspect the returned chunks, tags, metadata and distances. A polished answer is not reliable if the wrong source was retrieved.</p></div></div>
 </div>
-
-<div class="image-frame"><img alt="Cognigy Knowledge AI Flow tested through the Interaction Panel" class="arch-image" src="images/knowledge-ai-test.png"/><div class="image-caption">Add <code>knowledge-ai-test.png</code> to the repository’s <code>images</code> folder. Test realistic questions and confirm that the correct Store and evidence are being used.</div></div>
-
+<div class="image-frame"><img alt="Cognigy Knowledge AI Flow tested through the Interaction Panel" class="arch-image" src="images/knowledge-ai-test.png"/><div class="image-caption">Test Knowledge AI with realistic customer questions and confirm that the AI Agent retrieves evidence from the intended Knowledge Store before generating its response.</div></div>
 <div class="quote">“Knowledge AI does not simply give the model more information. It retrieves the most relevant approved evidence for the current job and uses that evidence to ground the response.”</div>
 <div class="section-faq"><h3>Common questions</h3>
 <details><summary>Does the LLM read every document for every question?</summary><div class="answer">No. Cognigy searches the indexed chunks and supplies the most relevant results to the LLM.</div></details>
@@ -1084,7 +1074,6 @@ tr:nth-child(even) td{background:#f8fafc}
 <details><summary>How do we stop the Agent searching the wrong content?</summary><div class="answer">Use separate Stores, clear Knowledge Tool descriptions, job-level knowledge, Source Tags and realistic retrieval tests.</div></details>
 </div>
 </section>
-
 <section class="page" id="knowledge-integration">
 <div class="eyebrow">6.2 · Knowledge management integration</div>
 <h2>Connect an existing enterprise knowledge-management solution</h2>
