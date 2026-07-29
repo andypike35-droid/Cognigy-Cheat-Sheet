@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+
+<html lang="en-GB">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cognigy Enterprise AI Architecture &amp; Operational Handbook</title>
+<style>
+:root{
+  --navy:#102a43;--blue:#1261a0;--teal:#008f87;--bg:#edf2f7;--card:#fff;
+  --text:#1d2a36;--muted:#617181;--border:#d8e2ea;--soft:#f5f8fb;
+  --warn:#fff7df;--warn-border:#d9b84a;--ok:#eef8f1;--ok-border:#62a96b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+body{display:grid;grid-template-columns:260px 1fr;overflow:hidden}
+aside{
+  background:linear-gradient(180deg,var(--navy),#173f66);color:#fff;padding:22px 16px;
+  overflow-y:auto;box-shadow:5px 0 20px rgba(16,42,67,.16)
+}
+aside h1{font-size:18px;line-height:1.3;margin:0 8px 6px}
+aside .sub{font-size:12px;opacity:.75;margin:0 8px 22px;line-height:1.4}
+.nav-group{margin:18px 0 8px;padding:0 8px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.65;font-weight:bold}
+.nav-link{
+  width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:11px 12px;
+  border-radius:9px;cursor:pointer;font-size:14px;margin:2px 0
+}
+.nav-link:hover{background:rgba(255,255,255,.10)}
+.nav-link.active{background:#fff;color:var(--navy);font-weight:bold}
+main{overflow-y:auto;padding:28px}
+.page{display:none;max-width:1120px;margin:0 auto;background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:32px;box-shadow:0 16px 44px rgba(16,42,67,.10);min-height:calc(100vh - 56px)}
+.page.active{display:block}
+.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--blue);font-weight:bold;margin-bottom:8px}
+h2{font-size:34px;color:var(--navy);margin:0 0 8px}
+h3{font-size:20px;color:var(--navy);margin:24px 0 9px}
+h4{font-size:15px;color:var(--blue);margin:0 0 7px}
+p,li{line-height:1.55}
+.lead{font-size:17px;color:var(--muted);max-width:900px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:17px 0}
+.card{background:var(--soft);border:1px solid var(--border);border-radius:13px;padding:17px}
+.card p,.card ul{margin-bottom:0}
+.quote{border-left:5px solid var(--teal);background:#f0faf9;padding:16px 18px;border-radius:0 11px 11px 0;margin:18px 0;font-size:17px;line-height:1.5}
+.callout{border:1px solid;border-radius:12px;padding:14px 16px;margin:16px 0}
+.callout.ok{background:var(--ok);border-color:var(--ok-border)}
+.callout.warn{background:var(--warn);border-color:var(--warn-border)}
+.diagram{background:#102a43;color:#fff;border-radius:14px;padding:20px;white-space:pre;overflow:auto;
+ font:14px/1.55 Consolas,Monaco,monospace;margin:16px 0}
+table{width:100%;border-collapse:collapse;margin:15px 0;font-size:14px}
+th,td{border:1px solid var(--border);padding:11px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:#fff}
+tr:nth-child(even) td{background:#f8fafc}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.pill{padding:6px 9px;border-radius:999px;background:#e8f1f8;color:var(--blue);font-weight:bold;font-size:12px}
+.cheat{margin:8px 0 0;padding-left:20px}
+.cheat li{margin:5px 0}
+.footer{margin-top:28px;padding-top:15px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}
+.mobile-menu{display:none}
+@media(max-width:800px){
+ body{display:block;overflow:auto}
+ aside{position:sticky;top:0;z-index:10;padding:12px;height:auto}
+ aside h1,.sub,.nav-group{display:none}
+ .mobile-menu{display:block;margin:0 0 8px;font-weight:bold}
+ #nav{display:flex;overflow-x:auto;gap:5px}
+ .nav-link{white-space:nowrap;width:auto;background:rgba(255,255,255,.08)}
+ main{padding:14px}
+ .page{padding:21px;min-height:auto}
+ h2{font-size:28px}
+}
+@media print{
+ body{display:block;overflow:visible}
+ aside{display:none}
+ main{overflow:visible;padding:0}
+ .page{display:block!important;box-shadow:none;border:0;border-radius:0;page-break-after:always;min-height:auto}
+}
+
+.visual-diagram{width:100%;overflow:auto;margin:18px 0 22px}
+.visual-diagram svg{width:100%;height:auto;min-width:760px;display:block}
+.svg-box-blue{fill:#f3f8fd;stroke:#2b6cb0;stroke-width:2}
+.svg-box-purple{fill:#f7f3ff;stroke:#6b46c1;stroke-width:2}
+.svg-box-green{fill:#f1fbf7;stroke:#2f855a;stroke-width:2}
+.svg-box-orange{fill:#fff7ed;stroke:#dd6b20;stroke-width:2}
+.svg-title{font:700 18px Arial;fill:#102a43}
+.svg-sub{font:13px Arial;fill:#516273}
+.svg-small{font:12px Arial;fill:#516273}
+.svg-label{font:700 13px Arial;fill:#102a43}
+.icon-circle{fill:#eef4fb;stroke:#c6d6e6;stroke-width:1.5}
+
+
+.nav-link.subnav{padding-left:22px;font-size:13px;position:relative}
+.nav-link.subnav::before{content:"";position:absolute;left:10px;top:50%;width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);transform:translateY(-50%)}
+.nav-link.subnav.active::before{background:var(--blue)}
+.section-banner{background:linear-gradient(90deg,#102a43,#173f66);color:#fff;padding:16px 18px;border-radius:14px;margin:0 0 22px}
+.section-banner strong{display:block;font-size:20px;margin-bottom:4px}
+.section-banner span{font-size:13px;opacity:.82}
+
+.arch-image{width:100%;height:auto;display:block;border:1px solid var(--border);border-radius:14px;background:#fff}
+.image-frame{background:#fff;border:1px solid var(--border);border-radius:16px;padding:12px;margin:16px 0;box-shadow:0 10px 28px rgba(16,42,67,.08)}
+.image-caption{font-size:12px;color:var(--muted);margin:9px 4px 2px;line-height:1.45}
+.visual-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}
+.visual-tab{background:#edf4fb;border:1px solid #cbd9e6;color:var(--navy);border-radius:999px;padding:7px 11px;font-size:12px;font-weight:bold}
+
+.provider-panel{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  padding:16px 18px;margin:0 0 20px;border:1px solid var(--border);border-radius:14px;
+  background:linear-gradient(90deg,#f8fbff,#f5f1ff)
+}
+.provider-panel label{font-weight:700;color:var(--navy)}
+.provider-select{
+  min-width:230px;padding:10px 12px;border:1px solid #b9c8d8;border-radius:9px;
+  background:#fff;color:var(--text);font-weight:700;font-size:14px
+}
+.provider-status{
+  padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700;
+  background:#eef8f1;color:#2f855a;border:1px solid #9ed0a5
+}
+.provider-status.generic{background:#fff7df;color:#8a6515;border-color:#e1c66b}
+.provider-note{
+  width:100%;font-size:12px;color:var(--muted);margin-top:2px
+}
+.provider-accent{
+  display:inline-block;padding:5px 9px;border-radius:999px;font-size:12px;
+  font-weight:700;background:#fff;border:1px solid var(--border)
+}
+
+.compact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:16px 0}
+.mini-card{border:1px solid var(--border);background:#fbfdff;border-radius:12px;padding:15px}
+.mini-card h4{margin:0 0 8px;color:var(--navy)}
+.status-standard{border-left:5px solid #2f855a}
+.status-alt{border-left:5px solid #d69e2e}
+.status-validate{border-left:5px solid #c53030}
+.faq{border-top:1px solid var(--border);padding:12px 0}
+.faq:first-child{border-top:0}
+.faq strong{display:block;color:var(--navy);margin-bottom:4px}
+.section-kicker{font-size:14px;color:var(--muted);margin:0 0 16px}
+
+.presenter-cheat{background:linear-gradient(90deg,#f4f1ff,#eef7ff);border:1px solid #cfc7ef;border-radius:14px;padding:16px 18px;margin:18px 0}
+.presenter-cheat h3{margin:0 0 10px;color:var(--navy)}
+.presenter-cheat ul{margin:0;padding-left:20px}.presenter-cheat li{margin:7px 0}
+.accordion-stack{display:grid;gap:12px;margin:15px 0}
+.accordion-item{border:1px solid var(--border);border-radius:13px;background:#fbfdff;overflow:hidden}
+.accordion-item.standard{border-left:5px solid #2f855a}.accordion-item.alternative{border-left:5px solid #d69e2e}.accordion-item.validate{border-left:5px solid #c53030}
+.accordion-item summary{list-style:none;cursor:pointer;padding:15px 18px;font-weight:700;color:var(--navy);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fff}
+.accordion-item summary::-webkit-details-marker{display:none}.accordion-item summary::after{content:"+";font-size:22px;color:var(--blue)}.accordion-item[open] summary::after{content:"−"}
+.accordion-body{padding:4px 18px 18px}
+.option-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-top:10px}
+.option-block{background:#fff;border:1px solid var(--border);border-radius:10px;padding:13px}
+.option-block h4{margin:0 0 7px;color:var(--blue)}.option-block p,.option-block ul{margin:0;font-size:14px;line-height:1.5}.option-block ul{padding-left:18px}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;margin-left:auto}
+.badge.standard{background:#e9f7ed;color:#2f855a}.badge.alternative{background:#fff7df;color:#8a6515}.badge.validate{background:#fff0f0;color:#a22b2b}
+
+.demo-intro{background:linear-gradient(90deg,#102a43,#173f66);color:#fff;border-radius:14px;padding:18px 20px;margin:16px 0}
+.demo-intro h3{color:#fff;margin:0 0 8px}.demo-intro p{margin:0;color:rgba(255,255,255,.88)}
+.demo-question{border:1px solid var(--border);border-radius:14px;background:#fff;margin:14px 0;overflow:hidden}
+.demo-question summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:700;color:var(--navy);display:flex;justify-content:space-between;gap:12px}
+.demo-question summary::-webkit-details-marker{display:none}.demo-question summary::after{content:"+";font-size:22px;color:var(--blue)}.demo-question[open] summary::after{content:"−"}
+.demo-question-body{padding:0 18px 18px}
+.demo-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:13px;margin-top:10px}
+.demo-card{background:#f8fbfe;border:1px solid var(--border);border-radius:11px;padding:14px}
+.demo-card h4{margin:0 0 8px;color:var(--blue)}.demo-card ul{margin:0;padding-left:18px}
+.demo-close{background:#eef8f1;border:1px solid #9ccca6;border-left:5px solid #2f855a;border-radius:12px;padding:15px 17px;margin:18px 0}
+.demo-close strong{display:block;color:#225c2d;margin-bottom:5px}
+.demo-sequence{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0}
+.demo-step{background:#eef4fb;border:1px solid #cad9e7;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--navy)}
+.demo-arrow{color:var(--blue);font-weight:700}
+
+.demo-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;border-bottom:1px solid var(--border);padding-bottom:10px}
+.demo-tab-btn{border:1px solid #cbd9e6;background:#f5f8fb;color:var(--navy);padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700;font-size:13px}
+.demo-tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.demo-tab-panel{display:none}
+.demo-tab-panel.active{display:block}
+.screen-frame{background:#fff;border:1px solid var(--border);border-radius:14px;padding:10px;margin:14px 0;box-shadow:0 8px 24px rgba(16,42,67,.08)}
+.screen-frame img{width:100%;height:auto;display:block;border-radius:9px}
+.screen-caption{font-size:12px;color:var(--muted);padding:9px 4px 2px;line-height:1.45}
+.collapsible-note{border:1px solid var(--border);border-radius:13px;background:#fbfdff;margin:14px 0;overflow:hidden}
+.collapsible-note summary{cursor:pointer;list-style:none;padding:14px 16px;font-weight:700;color:var(--navy);display:flex;justify-content:space-between;gap:12px}
+.collapsible-note summary::-webkit-details-marker{display:none}
+.collapsible-note summary::after{content:"+";font-size:21px;color:var(--blue)}
+.collapsible-note[open] summary::after{content:"−"}
+.collapsible-body{padding:0 16px 16px}
+.screenshot-note{background:#eef7ff;border:1px solid #c8ddf1;border-radius:10px;padding:11px 13px;margin:10px 0;font-size:13px}
+
+.tab-talk-track{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin:14px 0 16px;
+}
+.talk-block{
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:13px 15px;
+  background:#fbfdff;
+}
+.talk-block h4{
+  margin:0 0 7px;
+  color:var(--navy);
+  font-size:14px;
+}
+.talk-block ul{
+  margin:0;
+  padding-left:18px;
+}
+.talk-block li{
+  margin:5px 0;
+}
+.talk-block.objective{border-left:5px solid #2b6cb0}
+.talk-block.track{border-left:5px solid #6b46c1}
+.talk-block.takeaway{border-left:5px solid #2f855a;background:#f3fbf6}
+
+.integration-step-list{
+  display:grid;
+  gap:12px;
+  margin:14px 0;
+}
+.integration-step{
+  display:grid;
+  grid-template-columns:42px 1fr;
+  gap:12px;
+  align-items:start;
+  padding:13px 14px;
+  border:1px solid var(--border);
+  border-radius:11px;
+  background:#fff;
+}
+.integration-step-number{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  background:#eef4fb;
+  color:var(--blue);
+  border:1px solid #c9d9e8;
+}
+.integration-step h4{
+  margin:0 0 5px;
+  color:var(--navy);
+}
+.integration-step p{
+  margin:0;
+}
+.owner-tag{
+  display:inline-block;
+  margin-top:7px;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:700;
+  background:#f2f5f8;
+  color:var(--muted);
+  border:1px solid var(--border);
+}
+
+.security-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;border-bottom:1px solid var(--border);padding-bottom:10px}
+.security-tab-btn{border:1px solid #cbd9e6;background:#f5f8fb;color:var(--navy);padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700;font-size:13px}
+.security-tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.security-tab-panel{display:none}
+.security-tab-panel.active{display:block}
+.section-faq{margin-top:24px;border-top:1px solid var(--border);padding-top:18px}
+.section-faq h3{margin-top:0}
+.section-faq details{border:1px solid var(--border);border-radius:11px;background:#fbfdff;overflow:hidden;margin:9px 0}
+.section-faq summary{cursor:pointer;list-style:none;padding:13px 15px;font-weight:700;color:var(--navy)}
+.section-faq summary::-webkit-details-marker{display:none}
+.section-faq summary::after{content:"+";float:right;color:var(--blue);font-size:20px}
+.section-faq details[open] summary::after{content:"−"}
+.section-faq .answer{padding:0 15px 14px;color:var(--text);line-height:1.55}
+
+.crm-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;border-bottom:1px solid var(--border);padding-bottom:10px}
+.crm-tab-btn{border:1px solid #cbd9e6;background:#f5f8fb;color:var(--navy);padding:9px 13px;border-radius:9px;cursor:pointer;font-weight:700;font-size:13px}
+.crm-tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.crm-tab-panel{display:none}.crm-tab-panel.active{display:block}
+.crm-flow{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:18px 0}
+.crm-flow .step{background:#fff;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-weight:700;color:var(--navy)}
+.crm-flow .arrow{font-weight:900;color:var(--blue)}
+.crm-product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+.crm-product-card{border:1px solid var(--border);background:#fff;border-radius:12px;padding:15px}
+.crm-product-card h4{margin:0 0 8px;color:var(--navy)}
+.crm-capability-table{width:100%;border-collapse:collapse;margin-top:14px;background:#fff}
+.crm-capability-table th,.crm-capability-table td{border:1px solid var(--border);padding:10px;text-align:left;vertical-align:top}
+.crm-capability-table th{background:#f2f6f9;color:var(--navy)}
+.crm-callout{border-left:4px solid var(--blue);background:#f4f9fd;border-radius:0 10px 10px 0;padding:13px 15px;margin:14px 0}
+@media(max-width:850px){.crm-product-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside>
+<h1>Cognigy Enterprise AI Architecture &amp; Operational Handbook</h1>
+<p class="sub">Architecture • Integration • Security • Operations • AI Governance • Demo Guides</p>
+<div class="mobile-menu">Jump to section</div>
+<nav id="nav"><div class="nav-group">Architecture</div><button class="nav-link subnav active" data-page="platform-overview" type="button">1.1 Platform Overview</button><button class="nav-link subnav" data-page="component-architecture" type="button">1.2 Component Architecture</button><button class="nav-link subnav" data-page="hosting-platform" type="button">1.3 Hosting &amp; Resilience</button><div class="nav-group">CCaaS Integration</div><button class="nav-link" data-page="genesys" type="button">2. CCaaS Integration</button><div class="nav-group">API &amp; Connectivity</div><button class="nav-link" data-page="api" type="button">3. Enterprise Integration &amp; API Security</button><button class="nav-link" data-page="crm-connectivity" type="button">4. Enterprise CRM Connectivity</button><div class="nav-group">Demo Guides</div><button class="nav-link subnav" data-page="demo-ops-centre" type="button">4.1 AI Ops Centre</button><button class="nav-link subnav" data-page="demo-agentic-analytics" type="button">4.2 Agentic Analytics</button><button class="nav-link subnav" data-page="demo-simulator" type="button">4.3 Simulator</button><div class="nav-group">InfoSec</div><button class="nav-link" data-page="data" type="button">5. InfoSec &amp; Data Governance</button></nav>
+</aside>
+<main>
+<section class="page active" id="platform-overview"><div class="section-banner"><strong>1. Architecture &amp; Connectivity</strong><span>Where Cognigy fits, where it runs, how it is built and how it connects.</span></div>
+<div class="provider-panel">
+<label for="ccaasProvider">CCaaS provider</label>
+<select aria-label="Select CCaaS provider" class="provider-select" id="ccaasProvider">
+<option value="genesys">Genesys Cloud</option>
+<option value="cxone">NiCE CXone</option>
+<option value="amazon">Amazon Connect</option>
+<option value="cisco">Cisco Webex Contact Center</option>
+<option value="five9">Five9</option>
+<option value="talkdesk">Talkdesk</option>
+<option value="generic">Generic CCaaS</option>
+</select>
+<span class="provider-status" id="providerStatus">Fully customised</span>
+<div class="provider-note" id="providerNote">
+    Genesys-specific digital, voice, routing and ownership guidance is currently available.
+  </div>
+</div>
+<div class="eyebrow">1.1 · Platform overview</div><h2 id="providerPlatformTitle">Where Cognigy fits</h2><p class="lead" id="providerPlatformLead">Cognigy is the AI orchestration layer between customer channels, Genesys and Legal &amp; General’s enterprise services.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy sits between customer channels and enterprise systems as the AI orchestration layer.</li><li>The selected CCaaS platform continues to own routing, queues, recording and agent delivery.</li><li>Enterprise systems remain the source of truth for customer and business data.</li><li>Cognigy coordinates AI, knowledge and approved tools, then hands context back to a live agent when needed.</li><li>The objective is to enhance the existing estate rather than replace it.</li></ul></div><div aria-label="Cognigy architecture overview" class="visual-diagram">
+<svg role="img" viewbox="0 0 1180 600">
+<defs>
+<marker id="a1" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#173f66"></path></marker>
+</defs>
+<rect class="svg-box-blue" height="420" rx="18" width="190" x="20" y="45"></rect>
+<text class="svg-title" text-anchor="middle" x="115" y="82">Customers</text>
+<circle class="icon-circle" cx="70" cy="140" r="27"></circle><text font-size="28" text-anchor="middle" x="70" y="148">☎</text><text class="svg-label" x="115" y="146">Voice</text>
+<circle class="icon-circle" cx="70" cy="215" r="27"></circle><text font-size="25" text-anchor="middle" x="70" y="223">💬</text><text class="svg-label" x="115" y="221">Web / Chat</text>
+<circle class="icon-circle" cx="70" cy="290" r="27"></circle><text font-size="24" text-anchor="middle" x="70" y="298">◎</text><text class="svg-label" x="115" y="296">Messaging</text>
+<circle class="icon-circle" cx="70" cy="365" r="27"></circle><text font-size="24" text-anchor="middle" x="70" y="373">▯</text><text class="svg-label" x="115" y="371">Mobile App</text>
+<rect class="svg-box-orange" height="300" rx="18" width="220" x="270" y="105"></rect>
+<text class="svg-title" text-anchor="middle" x="380" y="145">Genesys Cloud</text>
+<text class="svg-sub" text-anchor="middle" x="380" y="170">or another channel platform</text>
+<line stroke="#e2c5ae" x1="305" x2="455" y1="205" y2="205"></line>
+<text class="svg-label" text-anchor="middle" x="380" y="242">Channel ownership</text>
+<text class="svg-sub" text-anchor="middle" x="380" y="270">Routing · Queues · Recording</text>
+<text class="svg-sub" text-anchor="middle" x="380" y="294">Presence · Agent desktop</text>
+<text class="svg-sub" text-anchor="middle" x="380" y="318">Live-agent delivery</text>
+<rect class="svg-box-purple" height="400" rx="20" width="330" x="550" y="55"></rect>
+<text class="svg-title" text-anchor="middle" x="715" y="95">Cognigy SaaS</text>
+<text class="svg-sub" text-anchor="middle" x="715" y="120">AI orchestration layer</text>
+<rect fill="#fff" height="58" rx="12" stroke="#d9ccf3" width="260" x="585" y="150"></rect><text class="svg-label" x="615" y="174">AI Agents</text><text class="svg-small" x="615" y="194">Understand, reason and respond</text>
+<rect fill="#fff" height="58" rx="12" stroke="#d9ccf3" width="260" x="585" y="222"></rect><text class="svg-label" x="615" y="246">Orchestration</text><text class="svg-small" x="615" y="266">Coordinate systems, tools and logic</text>
+<rect fill="#fff" height="58" rx="12" stroke="#d9ccf3" width="260" x="585" y="294"></rect><text class="svg-label" x="615" y="318">Knowledge &amp; Tools</text><text class="svg-small" x="615" y="338">RAG, APIs, MCP and business rules</text>
+<rect fill="#fff" height="58" rx="12" stroke="#d9ccf3" width="260" x="585" y="366"></rect><text class="svg-label" x="615" y="390">Guardrails &amp; Analytics</text><text class="svg-small" x="615" y="410">Safety, governance and insight</text>
+<rect class="svg-box-green" height="420" rx="18" width="220" x="940" y="45"></rect>
+<text class="svg-title" text-anchor="middle" x="1050" y="82">Enterprise Systems</text>
+<text class="svg-label" text-anchor="middle" x="1050" y="124">L&amp;G APIs</text>
+<text class="svg-label" text-anchor="middle" x="1050" y="171">CRM / Policy</text>
+<text class="svg-label" text-anchor="middle" x="1050" y="218">Claims</text>
+<text class="svg-label" text-anchor="middle" x="1050" y="265">Knowledge</text>
+<text class="svg-label" text-anchor="middle" x="1050" y="312">Payments</text>
+<text class="svg-label" text-anchor="middle" x="1050" y="359">Other Systems</text>
+<path d="M210 255 H265" fill="none" marker-end="url(#a1)" stroke="#173f66" stroke-width="3"></path>
+<path d="M490 255 H545" fill="none" marker-end="url(#a1)" stroke="#173f66" stroke-width="3"></path>
+<path d="M880 255 H935" fill="none" marker-end="url(#a1)" stroke="#173f66" stroke-width="3"></path>
+<rect fill="#f8fbff" height="58" rx="14" stroke="#cbd9e6" width="570" x="305" y="485"></rect>
+<text class="svg-label" text-anchor="middle" x="590" y="510">Secure HTTPS / REST APIs</text>
+<text class="svg-small" text-anchor="middle" x="590" y="532">Authentication · authorisation · audit · data minimisation</text>
+</svg></div><div class="quote">“Cognigy does not replace Genesys or become the system of record. It controls the automated AI interaction and coordinates approved enterprise services.”</div><div class="grid"><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI orchestration</li><li>AI Agents and knowledge</li><li>Tool and API execution</li><li>Guardrails and analytics</li></ul></div>
+<div class="card" id="providerSummaryCard">
+<h4 id="providerSummaryTitle">Genesys Cloud</h4>
+<ul class="cheat" id="providerSummaryList">
+<li>Owns voice and digital channel entry</li>
+<li>Provides routing, queues and agent delivery</li>
+<li>Connects to Cognigy for automated AI interactions</li>
+<li>Supports live-agent handover with context</li>
+</ul>
+</div>
+<div class="card"><h4>Genesys / channel platform</h4><ul class="cheat"><li>Voice and digital channel entry</li><li>Routing and queues</li><li>Recording and agent desktop</li><li>Live-agent delivery</li></ul></div><div class="card"><h4>Legal &amp; General</h4><ul class="cheat"><li>Systems of record</li><li>Identity and API policy</li><li>Business rules and data</li><li>Retention requirements</li></ul></div></div><div class="section-faq"><h3>Common questions</h3><details><summary>Does Cognigy replace the contact-centre platform?</summary><div class="answer">No. The CCaaS platform continues to own channels, routing, queues and agent delivery. Cognigy provides the AI orchestration layer.</div></details><details><summary>Does Cognigy replace our CRM or policy platform?</summary><div class="answer">No. Enterprise systems remain the systems of record and are accessed through approved integrations.</div></details><details><summary>Can the same AI Agent be reused across channels?</summary><div class="answer">Yes. Core logic, knowledge and tools can be reused, while channel-specific presentation and routing remain configurable.</div></details></div></section><section class="page" id="component-architecture"><div class="eyebrow">1.2 · Component architecture</div><h2>How Cognigy fits across the wider ecosystem</h2><p class="lead">A single view of channels, CCaaS, Cognigy, AI services, tools and enterprise systems.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is the central orchestration layer connecting channels, AI models, tools and enterprise systems.</li><li>It is model agnostic, so providers can be changed without redesigning the whole application.</li><li>REST APIs, MCP servers, RAG services and custom tools can all be orchestrated by the same AI Agent.</li><li>Channels and backend systems remain decoupled, making the architecture easier to evolve.</li><li>This provides flexibility today while reducing future migration effort.</li></ul></div><div class="visual-tabs"><span class="visual-tab">Channels</span><span class="visual-tab">Genesys</span><span class="visual-tab">Cognigy</span><span class="visual-tab">MCP &amp; AI Tools</span><span class="visual-tab">LLM / Speech</span><span class="visual-tab">Enterprise Systems</span></div><div class="image-frame"><img alt="Cognigy AI orchestration component architecture showing customer channels, MCP and AI tools, model and speech providers, and enterprise systems" class="arch-image" src="images/component-architecture.png"/><div class="image-caption">Use this as the main component view: Cognigy sits at the centre, orchestrating channels, AI services, tools and L&amp;G enterprise systems without replacing them.</div></div><div class="grid"><div class="card"><h4>Channels</h4><ul class="cheat"><li>Voice, web, messaging and mobile</li><li>Typically owned by Genesys or another channel platform</li></ul></div><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI Agents and orchestration</li><li>Knowledge, tools, guardrails and analytics</li></ul></div><div class="card"><h4>Enterprise systems</h4><ul class="cheat"><li>CRM, policy, claims and payments</li><li>Remain the systems of record</li></ul></div><div class="card"><h4>AI services</h4><ul class="cheat"><li>LLM and speech providers</li><li>Provider-agnostic and selected by architecture</li></ul></div></div><div class="quote">“Cognigy connects the existing estate into a controlled, reusable AI orchestration layer.”</div><div class="section-faq"><h3>Common questions</h3><details><summary>Can we use different LLM or speech providers?</summary><div class="answer">Yes. Cognigy is provider-agnostic and can orchestrate approved LLM and speech services.</div></details><details><summary>Can Cognigy use REST APIs, MCP and custom tools together?</summary><div class="answer">Yes. These can be exposed as governed tools within the same orchestration layer.</div></details><details><summary>Do enterprise systems need to change?</summary><div class="answer">Not necessarily. Cognigy is designed to integrate with the existing estate through approved interfaces.</div></details></div></section><section class="page" id="hosting-platform">
+<div class="eyebrow">1.3 · Hosting, resilience &amp; data residency</div>
+<h2>How Cognigy is hosted and operated</h2>
+<p class="section-kicker">A concise view of the SaaS deployment model, operational responsibility, resilience and regional considerations.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is delivered as a fully managed SaaS platform hosted in NiCE-managed AWS.</li><li>Kubernetes and independently deployable services provide scalability, resilience and rolling upgrades.</li><li>For a typical UK deployment, London is the primary region and Ireland is the paired backup region; the contracted topology must be confirmed.</li><li>The design environment is separated from the live runtime, so new versions can be prepared without disrupting active conversations.</li><li>NiCE manages the platform; the customer manages AI configuration, integrations and business data.</li></ul></div>
+<div class="image-frame">
+<img alt="Cognigy SaaS hosting architecture in NiCE-managed AWS" class="arch-image" src="images/saas-hosting-architecture.png"/>
+<div class="image-caption">Illustrative reference architecture. Actual topology depends on the contracted service and deployment model.</div>
+</div>
+<div class="compact-grid">
+<div class="mini-card status-standard">
+<h4>Standard deployment</h4>
+<ul class="cheat">
+<li>NiCE-managed Cognigy SaaS</li>
+<li>Hosted in AWS</li>
+<li>Kubernetes-based microservices platform</li>
+<li>No new on-premises deployments</li>
+</ul>
+</div>
+<div class="mini-card">
+<h4>Example UK deployment</h4>
+<ul class="cheat">
+<li><strong>Primary:</strong> AWS Europe (London), eu-west-2</li>
+<li><strong>Paired backup region:</strong> AWS Europe (Ireland), eu-west-1</li>
+<li>Confirm the exact topology for the contracted environment</li>
+</ul>
+</div>
+<div class="mini-card">
+<h4>NiCE operates</h4>
+<ul class="cheat">
+<li>AWS infrastructure and Kubernetes</li>
+<li>Patching, upgrades and platform monitoring</li>
+<li>Scaling, backup and disaster-recovery processes</li>
+</ul>
+</div>
+<div class="mini-card">
+<h4>Customer operates</h4>
+<ul class="cheat">
+<li>AI Agents, prompts and knowledge</li>
+<li>Business integrations and API policy</li>
+<li>Data classification and retention requirements</li>
+</ul>
+</div>
+</div>
+<div class="callout warn">
+<strong>Architect note:</strong> primary hosting region and disaster-recovery region are related but not identical questions. For a typical UK deployment, London is paired with Ireland; sovereign-cloud or dedicated arrangements may use a different topology or different data centres and must be confirmed.
+</div>
+<div class="compact-grid">
+<div class="mini-card status-standard">
+<h4>High availability</h4>
+<ul class="cheat">
+<li>Kubernetes self-healing</li>
+<li>Independent service scaling</li>
+<li>Rolling upgrades</li>
+<li>Managed monitoring and alerting</li>
+</ul>
+</div>
+<div class="mini-card status-validate">
+<h4>Confirm during design</h4>
+<ul class="cheat">
+<li>Contracted hosting model</li>
+<li>Primary and paired regions</li>
+<li>RPO and RTO commitments</li>
+<li>Sovereign-cloud requirements</li>
+<li>Data-residency obligations</li>
+</ul>
+</div>
+</div>
+<div class="section-faq"><h3>Common questions</h3><details><summary>Where is Cognigy hosted?</summary><div class="answer">Cognigy is delivered as a NiCE-managed SaaS platform in AWS. The exact primary and backup topology depends on the contracted environment.</div></details><details><summary>What is the typical UK regional model?</summary><div class="answer">A typical UK deployment uses AWS Europe (London), eu-west-2, with Ireland, eu-west-1, as the paired backup region. This must be confirmed for the specific service.</div></details><details><summary>Who operates the platform?</summary><div class="answer">NiCE operates the cloud, Kubernetes and platform services. The customer operates its AI configuration, integrations and business data.</div></details></div></section>
+<section class="page" id="genesys">
+<div class="eyebrow">2 · CCaaS integration</div>
+<h2 id="providerIntegrationTitle">CCaaS integration</h2>
+<div class="section-banner" id="providerIntegrationBanner">
+<strong id="providerBannerTitle">Genesys Cloud integration</strong>
+<span id="providerBannerText">Digital, voice, channel ownership and live-agent handover.</span>
+</div><div data-provider-detail="genesys" id="genesysIntegrationCheat">
+<details class="collapsible-note" open="">
+<summary>Genesys integration cheat sheet</summary>
+<div class="collapsible-body">
+<h3>Digital integration</h3>
+<div class="integration-step-list">
+<div class="integration-step">
+<div class="integration-step-number">1</div>
+<div>
+<h4>Build the AI experience in Cognigy</h4>
+<p>The Cognigy Flow, AI Agent, knowledge, tools and business logic are created and tested in Cognigy.</p>
+<span class="owner-tag">NiCE/Cognigy can support this</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">2</div>
+<div>
+<h4>Create the Cognigy Genesys Endpoint</h4>
+<p>The Flow is exposed through a Cognigy Genesys Endpoint, which provides the endpoint URL and verification token required by Genesys.</p>
+<span class="owner-tag">Configured in Cognigy</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">3</div>
+<div>
+<h4>Configure the Genesys Bot Connector</h4>
+<p>The customer’s Genesys team installs and configures the Bot Connector using the Cognigy Endpoint URL and verification token.</p>
+<span class="owner-tag">Customer / Genesys responsibility</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">4</div>
+<div>
+<h4>Build the Genesys Architect messaging Flow</h4>
+<p>The customer creates the inbound messaging Flow in Genesys Architect and adds the Call Bot Connector action.</p>
+<span class="owner-tag">Customer / Genesys responsibility</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">5</div>
+<div>
+<h4>Configure routing and live-agent handover</h4>
+<p>Genesys controls the success, failure and Transfer to ACD paths, including the queue and agent-delivery logic.</p>
+<span class="owner-tag">Customer / Genesys responsibility</span>
+</div>
+</div>
+</div>
+<div class="callout ok">
+<strong>Digital summary:</strong> Cognigy provides the AI experience and endpoint. The customer’s Genesys team connects that endpoint into Genesys Architect and owns routing, queues and agent handover.
+      </div>
+<h3>Voice integration</h3>
+<div class="integration-step-list">
+<div class="integration-step">
+<div class="integration-step-number">1</div>
+<div>
+<h4>The call enters through Genesys</h4>
+<p>Genesys owns the PSTN/SIP ingress, call control, recording and initial routing decision.</p>
+<span class="owner-tag">Customer / Genesys responsibility</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">2</div>
+<div>
+<h4>Route the call to Cognigy Voice Gateway</h4>
+<p>The customer’s Genesys and telephony teams configure the agreed SIP or voice-routing path to Cognigy Voice Gateway.</p>
+<span class="owner-tag">Customer-led, with NiCE/Cognigy design support</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">3</div>
+<div>
+<h4>Configure the Cognigy voice experience</h4>
+<p>Voice Gateway, speech providers, the Cognigy Flow and AI Agent behaviour are configured in Cognigy.</p>
+<span class="owner-tag">NiCE/Cognigy can support this</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">4</div>
+<div>
+<h4>Cognigy handles the automated conversation</h4>
+<p>Cognigy manages speech orchestration, AI reasoning, knowledge and approved backend actions during the automated part of the call.</p>
+<span class="owner-tag">Cognigy responsibility</span>
+</div>
+</div>
+<div class="integration-step">
+<div class="integration-step-number">5</div>
+<div>
+<h4>Transfer back to Genesys when required</h4>
+<p>The customer configures the transfer destination, Genesys queue and live-agent routing. Context handover is agreed as part of the solution design.</p>
+<span class="owner-tag">Customer / Genesys responsibility</span>
+</div>
+</div>
+</div>
+<div class="callout ok">
+<strong>Voice summary:</strong> Genesys controls the call and agent routing. Cognigy handles the automated voice interaction. The customer configures Genesys and telephony; NiCE/Cognigy supports the Cognigy and integration-design components.
+      </div>
+<div class="callout warn">
+<strong>Important:</strong> NiCE/Cognigy would not make changes directly inside the customer’s Genesys environment unless separately agreed and authorised. The customer’s Genesys administrators remain responsible for their own platform configuration.
+      </div>
+</div>
+</details>
+</div>
+<h3 data-provider-detail="genesys">Digital interaction</h3>
+<div aria-label="Genesys digital integration diagram" class="visual-diagram" data-provider-detail="genesys">
+<svg role="img" viewbox="0 0 1120 340">
+<defs><marker id="a3" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#173f66"></path></marker></defs>
+<rect class="svg-box-blue" height="110" rx="16" width="160" x="20" y="105"></rect><text class="svg-title" text-anchor="middle" x="100" y="145">Customer</text><text class="svg-sub" text-anchor="middle" x="100" y="175">Web / messaging</text>
+<rect class="svg-box-orange" height="180" rx="16" width="210" x="225" y="70"></rect><text class="svg-title" text-anchor="middle" x="330" y="110">Genesys Digital</text><text class="svg-sub" text-anchor="middle" x="330" y="142">Messenger</text><text class="svg-sub" text-anchor="middle" x="330" y="172">Architect Flow</text><text class="svg-sub" text-anchor="middle" x="330" y="202">Bot Connector</text>
+<rect class="svg-box-purple" height="180" rx="16" width="220" x="485" y="70"></rect><text class="svg-title" text-anchor="middle" x="595" y="110">Cognigy</text><text class="svg-sub" text-anchor="middle" x="595" y="142">Genesys Endpoint</text><text class="svg-sub" text-anchor="middle" x="595" y="172">AI Agent</text><text class="svg-sub" text-anchor="middle" x="595" y="202">Knowledge &amp; APIs</text>
+<rect class="svg-box-green" height="180" rx="16" width="170" x="755" y="70"></rect><text class="svg-title" text-anchor="middle" x="840" y="110">L&amp;G Systems</text><text class="svg-sub" text-anchor="middle" x="840" y="150">CRM</text><text class="svg-sub" text-anchor="middle" x="840" y="180">Policy / Claims</text><text class="svg-sub" text-anchor="middle" x="840" y="210">Identity / APIs</text>
+<rect class="svg-box-blue" height="110" rx="16" width="135" x="965" y="105"></rect><text class="svg-title" text-anchor="middle" x="1032" y="145">Agent</text><text class="svg-sub" text-anchor="middle" x="1032" y="175">Transfer to ACD</text>
+<path d="M180 160 H220" fill="none" marker-end="url(#a3)" stroke="#173f66" stroke-width="3"></path><path d="M435 160 H480" fill="none" marker-end="url(#a3)" stroke="#173f66" stroke-width="3"></path><path d="M705 160 H750" fill="none" marker-end="url(#a3)" stroke="#173f66" stroke-width="3"></path><path d="M925 160 H960" fill="none" marker-end="url(#a3)" stroke="#173f66" stroke-width="3"></path>
+<text class="svg-small" text-anchor="middle" x="330" y="285">Genesys owns channel, routing and agent delivery</text><text class="svg-small" text-anchor="middle" x="595" y="305">Cognigy owns the automated AI interaction</text><text class="svg-small" text-anchor="middle" x="840" y="285">L&amp;G owns systems and data</text>
+</svg></div>
+<div class="grid" data-provider-detail="genesys">
+<div class="card">
+<h4>Digital cheat guide</h4>
+<ol class="cheat">
+<li>Create a Cognigy Genesys Endpoint and select the Flow.</li>
+<li>Copy its endpoint URL and create the verification token.</li>
+<li>Install the Genesys Bot Connector.</li>
+<li>Configure the endpoint URL and token in Genesys.</li>
+<li>Add Call Bot Connector in the Architect inbound-message Flow.</li>
+<li>Add success, failure and Transfer to ACD paths.</li>
+</ol>
+</div>
+<div class="card">
+<h4>Digital ownership</h4>
+<ul class="cheat">
+<li><strong>Genesys:</strong> channel entry, messenger session, routing and agent queue.</li>
+<li><strong>Cognigy:</strong> automated AI dialogue, knowledge, tools and business orchestration.</li>
+<li><strong>L&amp;G:</strong> customer data, identity, policies and backend decisions.</li>
+</ul>
+</div>
+</div>
+<h3 data-provider-detail="genesys">Voice interaction</h3>
+<div aria-label="Genesys voice integration diagram" class="visual-diagram" data-provider-detail="genesys">
+<svg role="img" viewbox="0 0 1120 360">
+<defs><marker id="a4" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3"><path d="M0,0 L0,6 L9,3 z" fill="#173f66"></path></marker></defs>
+<rect class="svg-box-blue" height="110" rx="16" width="150" x="20" y="115"></rect><text class="svg-title" text-anchor="middle" x="95" y="155">Caller</text><text class="svg-sub" text-anchor="middle" x="95" y="185">PSTN / voice</text>
+<rect class="svg-box-orange" height="200" rx="16" width="210" x="215" y="70"></rect><text class="svg-title" text-anchor="middle" x="320" y="110">Genesys Cloud</text><text class="svg-sub" text-anchor="middle" x="320" y="142">Call control</text><text class="svg-sub" text-anchor="middle" x="320" y="172">Routing &amp; recording</text><text class="svg-sub" text-anchor="middle" x="320" y="202">Queues &amp; agents</text><text class="svg-sub" text-anchor="middle" x="320" y="232">SIP / media path</text>
+<rect class="svg-box-purple" height="200" rx="16" width="240" x="475" y="70"></rect><text class="svg-title" text-anchor="middle" x="595" y="110">Cognigy Voice</text><text class="svg-sub" text-anchor="middle" x="595" y="142">Voice Gateway</text><text class="svg-sub" text-anchor="middle" x="595" y="172">Speech-to-Text</text><text class="svg-sub" text-anchor="middle" x="595" y="202">AI Agent</text><text class="svg-sub" text-anchor="middle" x="595" y="232">Text-to-Speech</text>
+<rect class="svg-box-green" height="200" rx="16" width="170" x="765" y="70"></rect><text class="svg-title" text-anchor="middle" x="850" y="110">L&amp;G APIs</text><text class="svg-sub" text-anchor="middle" x="850" y="150">Identity</text><text class="svg-sub" text-anchor="middle" x="850" y="180">Policy / Claims</text><text class="svg-sub" text-anchor="middle" x="850" y="210">Other tools</text>
+<rect class="svg-box-blue" height="110" rx="16" width="120" x="980" y="115"></rect><text class="svg-title" text-anchor="middle" x="1040" y="155">Agent</text><text class="svg-sub" text-anchor="middle" x="1040" y="185">Queue transfer</text>
+<path d="M170 170 H210" fill="none" marker-end="url(#a4)" stroke="#173f66" stroke-width="3"></path><path d="M425 170 H470" fill="none" marker-end="url(#a4)" stroke="#173f66" stroke-width="3"></path><path d="M715 170 H760" fill="none" marker-end="url(#a4)" stroke="#173f66" stroke-width="3"></path><path d="M935 170 H975" fill="none" marker-end="url(#a4)" stroke="#173f66" stroke-width="3"></path>
+<path d="M980 235 C900 320,420 320,320 270" fill="none" marker-end="url(#a4)" stroke="#6b46c1" stroke-dasharray="7 6" stroke-width="2.5"></path>
+<text class="svg-small" text-anchor="middle" x="650" y="330">Context can be passed back for live-agent handover</text>
+</svg></div>
+<div class="grid" data-provider-detail="genesys">
+<div class="card">
+<h4>Voice cheat guide</h4>
+<ol class="cheat">
+<li>Genesys receives and controls the call.</li>
+<li>The call is routed to the agreed Cognigy voice entry point.</li>
+<li>Voice Gateway manages speech services and connects to the Cognigy Flow.</li>
+<li>Cognigy handles dialogue and approved backend actions.</li>
+<li>When required, the call and available context are handed back to Genesys for agent routing.</li>
+</ol>
+</div>
+<div class="card">
+<h4>Voice ownership</h4>
+<ul class="cheat">
+<li><strong>Genesys:</strong> PSTN, call control, queueing, recording and agent delivery.</li>
+<li><strong>Cognigy:</strong> automated voice conversation and orchestration.</li>
+<li><strong>Shared design:</strong> SIP/media path, transfer method, context handover and failure behaviour.</li>
+</ul>
+</div>
+</div>
+<div class="quote" data-provider-detail="genesys">“Genesys owns the channel and contact-centre session. Cognigy owns the automated AI portion. L&amp;G’s systems remain the source of truth.”</div>
+<div id="genericProviderGuidance" style="display:none">
+<h3 id="genericProviderHeading">Generic CCaaS integration pattern</h3>
+<div aria-label="Generic CCaaS integration diagram" class="visual-diagram">
+<svg role="img" viewbox="0 0 1120 360">
+<defs>
+<marker id="genericArrow" markerheight="10" markerwidth="10" orient="auto" refx="8" refy="3">
+<path d="M0,0 L0,6 L9,3 z" fill="#173f66"></path>
+</marker>
+</defs>
+<rect class="svg-box-blue" height="120" rx="16" width="170" x="25" y="110"></rect>
+<text class="svg-title" text-anchor="middle" x="110" y="153">Customer</text>
+<text class="svg-sub" text-anchor="middle" x="110" y="185">Voice / Digital</text>
+<rect class="svg-box-orange" height="200" rx="16" width="240" x="245" y="70"></rect>
+<text class="svg-title" id="genericDiagramProvider" text-anchor="middle" x="365" y="112">CCaaS Platform</text>
+<text class="svg-sub" text-anchor="middle" x="365" y="148">Channel entry</text>
+<text class="svg-sub" text-anchor="middle" x="365" y="178">Routing &amp; queues</text>
+<text class="svg-sub" text-anchor="middle" x="365" y="208">Agent desktop</text>
+<text class="svg-sub" text-anchor="middle" x="365" y="238">Live-agent handover</text>
+<rect class="svg-box-purple" height="200" rx="16" width="240" x="535" y="70"></rect>
+<text class="svg-title" text-anchor="middle" x="655" y="112">Cognigy</text>
+<text class="svg-sub" text-anchor="middle" x="655" y="148">AI Agent</text>
+<text class="svg-sub" text-anchor="middle" x="655" y="178">Knowledge &amp; tools</text>
+<text class="svg-sub" text-anchor="middle" x="655" y="208">Conversation orchestration</text>
+<text class="svg-sub" text-anchor="middle" x="655" y="238">Context handover</text>
+<rect class="svg-box-green" height="200" rx="16" width="260" x="825" y="70"></rect>
+<text class="svg-title" text-anchor="middle" x="955" y="112">Enterprise Systems</text>
+<text class="svg-sub" text-anchor="middle" x="955" y="148">CRM / Policy / Claims</text>
+<text class="svg-sub" text-anchor="middle" x="955" y="178">Identity / Payments</text>
+<text class="svg-sub" text-anchor="middle" x="955" y="208">Knowledge / Other APIs</text>
+<path d="M195 170 H240" marker-end="url(#genericArrow)" stroke="#173f66" stroke-width="3"></path>
+<path d="M485 170 H530" marker-end="url(#genericArrow)" stroke="#173f66" stroke-width="3"></path>
+<path d="M775 170 H820" marker-end="url(#genericArrow)" stroke="#173f66" stroke-width="3"></path>
+</svg>
+</div>
+<div class="grid">
+<div class="card">
+<h4>Channel platform normally owns</h4>
+<ul class="cheat">
+<li>Voice and digital channel entry</li>
+<li>Routing, queues and agent assignment</li>
+<li>Recording and agent desktop</li>
+<li>Live-agent operations</li>
+</ul>
+</div>
+<div class="card">
+<h4>Cognigy normally owns</h4>
+<ul class="cheat">
+<li>Automated AI conversation</li>
+<li>Knowledge and business orchestration</li>
+<li>Tool and API execution</li>
+<li>Handover context</li>
+</ul>
+</div>
+<div class="card">
+<h4>Provider-specific validation required</h4>
+<ul class="cheat">
+<li>Supported digital connector</li>
+<li>Voice and SIP architecture</li>
+<li>Agent transfer method</li>
+<li>Context and transcript handover</li>
+</ul>
+</div>
+</div>
+<div class="callout warn">
+<strong>Generic guidance only:</strong> the exact integration pattern, licensing and supported features must be confirmed for the selected CCaaS provider.
+  </div>
+</div>
+<div class="section-faq"><h3>Common questions</h3><details><summary>Who configures Genesys?</summary><div class="answer">The customer’s Genesys administrators configure their own Genesys environment. NiCE/Cognigy supports the Cognigy components and integration design.</div></details><details><summary>Is digital configured the same way as voice?</summary><div class="answer">No. Digital uses the Genesys Bot Connector and Architect messaging Flow. Voice uses a separate SIP and Voice Gateway design.</div></details><details><summary>Who owns live-agent routing?</summary><div class="answer">Genesys owns queues, routing and agent delivery. Cognigy provides the automated AI interaction and handover context.</div></details></div></section>
+<section class="page" id="api">
+<div class="eyebrow">3 · API authentication, security &amp; connectivity</div>
+<h2>How Cognigy securely connects to enterprise services</h2>
+<p class="section-kicker">Use the standard REST pattern where possible. Expand the alternatives only when stricter network or exposure requirements apply.</p>
+<h3>Standard connectivity</h3><div class="presenter-cheat api-standard-cheat">
+<h3>Standard Connectivity — Presenter Cheat Sheet</h3>
+<p><strong>Use this when explaining the normal enterprise deployment.</strong></p>
+<ul>
+<li>The standard integration pattern is outbound REST over HTTPS from Cognigy SaaS to approved enterprise APIs.</li>
+<li>The customer secures those APIs using OAuth, API keys, an API Gateway, WAF policies, IP allowlisting and least-privilege permissions.</li>
+<li>Cognigy never receives unrestricted network access; it can only call the APIs and tools that have been explicitly configured.</li>
+<li>This is the recommended architecture and the normal pattern for most enterprise Cognigy deployments.</li>
+<li>No direct database access is normally required because Cognigy communicates through governed enterprise APIs.</li>
+</ul>
+</div>
+<div class="accordion-stack">
+<details class="accordion-item standard" open="">
+<summary>REST over HTTPS <span class="badge standard">Standard</span></summary>
+<div class="accordion-body"><div class="option-grid">
+<div class="option-block"><h4>What it is</h4><p>Cognigy sends an outbound HTTPS request to an approved REST endpoint.</p></div>
+<div class="option-block"><h4>How it works</h4><p>A Flow node or tool sends GET, POST, PUT, PATCH or DELETE requests through the customer’s governed API layer.</p></div>
+<div class="option-block"><h4>Typical controls</h4><ul><li>Trusted TLS certificate</li><li>OAuth 2.0 or API key</li><li>WAF and rate limits</li><li>Cognigy egress-IP allowlisting</li></ul></div>
+<div class="option-block"><h4>Best suited to</h4><p>Most enterprise integrations where a governed API can be securely reached from SaaS.</p></div>
+</div></div></details>
+<details class="accordion-item standard">
+<summary>Authentication and credentials <span class="badge standard">Standard</span></summary>
+<div class="accordion-body"><div class="option-grid">
+<div class="option-block"><h4>Supported approaches</h4><ul><li>OAuth 2.0 / bearer tokens</li><li>API key / X-API-Key</li><li>Basic authentication</li><li>Custom headers</li></ul></div>
+<div class="option-block"><h4>Credential handling</h4><p>Credentials are stored in encrypted Cognigy Connections and should be separated by environment.</p></div>
+<div class="option-block"><h4>Recommended design</h4><ul><li>Least-privilege scopes</li><li>Short-lived tokens</li><li>Separate production credentials</li></ul></div>
+</div></div></details>
+<details class="accordion-item standard">
+<summary>AI and API guardrails <span class="badge standard">Standard</span></summary>
+<div class="accordion-body"><div class="option-grid">
+<div class="option-block"><h4>Restricted tools</h4><p>The AI can only use tools and Flow nodes explicitly configured for the use case.</p></div>
+<div class="option-block"><h4>Deterministic gates</h4><p>Authentication, payments and high-risk actions can require rule-based validation.</p></div>
+<div class="option-block"><h4>Operational controls</h4><ul><li>Timeouts and retries</li><li>Error handling</li><li>Logging controls</li><li>Auditable execution</li></ul></div>
+</div></div></details>
+</div>
+<h3>When standard REST connectivity isn't possible</h3><div class="presenter-cheat api-alternative-cheat">
+<h3>When Standard REST Connectivity Isn't Possible — Presenter Cheat Sheet</h3>
+<p><strong>Use this when the customer says, “We do not want to expose our internal APIs to the internet.”</strong></p>
+<ul>
+<li>The first recommendation is normally an Integration Gateway or Relay Service rather than exposing internal systems directly.</li>
+<li>Cognigy calls the gateway over HTTPS; the gateway authenticates and validates the request, then communicates privately with internal applications.</li>
+<li>Enterprise middleware such as MuleSoft, Boomi or Azure Integration Services can perform the same role while adding transformation, orchestration and governance.</li>
+<li>Custom Cognigy Extensions can simplify specialist integration logic or authentication, but they do not create private network connectivity. The customer owns and maintains the custom code.</li>
+<li>VPN, dedicated networking or sovereign deployment options should only be considered where standard integration patterns are unsuitable and require NiCE/Cognigy architecture validation.</li>
+</ul>
+</div>
+<p class="section-kicker">Use these when core services should not be directly exposed through the standard public REST pattern.</p>
+<div class="accordion-stack">
+<details class="accordion-item alternative">
+<summary>Integration Gateway (Recommended) <span class="badge alternative">Preferred alternative</span></summary>
+<div class="accordion-body">
+<div class="option-grid">
+<div class="option-block">
+<h4>What is it?</h4>
+<p>A small, controlled API layer that sits between Cognigy and the customer's internal applications. It can be an API Gateway, a DMZ service or a lightweight relay.</p>
+</div>
+<div class="option-block">
+<h4>How does it work?</h4>
+<p>Cognigy sends an outbound HTTPS request to the Integration Gateway. The gateway authenticates and validates the request, then calls the internal system over the customer's private network.</p>
+</div>
+<div class="option-block">
+<h4>Why use it?</h4>
+<ul>
+<li>Core internal systems remain private</li>
+<li>Only approved operations are exposed</li>
+<li>OAuth, WAF, rate limits and allowlisting are centralised</li>
+<li>Requests can be logged and audited</li>
+</ul>
+</div>
+<div class="option-block">
+<h4>Who owns it?</h4>
+<p>The customer normally owns and operates the gateway. NiCE/Cognigy helps define the required interface and configures the Cognigy-side integration.</p>
+</div>
+</div>
+</div></details>
+<details class="accordion-item alternative">
+<summary>Enterprise Middleware / iPaaS <span class="badge alternative">Alternative</span></summary>
+<div class="accordion-body">
+<div class="option-grid">
+<div class="option-block">
+<h4>What is it?</h4>
+<p>An enterprise integration platform such as MuleSoft, Boomi, Azure Integration Services or another middleware layer.</p>
+</div>
+<div class="option-block">
+<h4>How does it work?</h4>
+<p>Cognigy calls the middleware over HTTPS. The middleware validates, transforms and orchestrates the request before calling internal services privately.</p>
+</div>
+<div class="option-block">
+<h4>When is it useful?</h4>
+<ul>
+<li>Several internal systems must be coordinated</li>
+<li>Payload or protocol transformation is required</li>
+<li>Integration governance is already centralised</li>
+<li>The customer wants one reusable integration layer</li>
+</ul>
+</div>
+<div class="option-block">
+<h4>Who owns it?</h4>
+<p>The customer owns and maintains the middleware platform and internal integration logic.</p>
+</div>
+</div>
+</div></details>
+<details class="accordion-item alternative">
+<summary>Custom Cognigy Extension <span class="badge alternative">Custom code</span></summary>
+<div class="accordion-body">
+<div class="option-grid">
+<div class="option-block">
+<h4>What is it?</h4>
+<p>Customer-developed JavaScript or TypeScript code packaged as a reusable Cognigy Flow Node, integration or Knowledge Connector.</p>
+</div>
+<div class="option-block">
+<h4>How does it work?</h4>
+<p>The Extension is uploaded into Cognigy and used inside a Flow to perform custom authentication, call third-party SDKs, transform payloads or encapsulate reusable logic.</p>
+</div>
+<div class="option-block">
+<h4>Important limitation</h4>
+<p><strong>An Extension does not create a private network route.</strong> It still needs a reachable API, service or middleware relay.</p>
+</div>
+<div class="option-block">
+<h4>Customer responsibility</h4>
+<ul>
+<li>Source code and repository ownership</li>
+<li>Security review and testing</li>
+<li>Dependency and compatibility updates</li>
+<li>Ongoing support and maintenance</li>
+</ul>
+</div>
+</div>
+</div></details>
+<details class="accordion-item validate">
+<summary>Private Connectivity (Special Design) <span class="badge validate">Requires validation</span></summary>
+<div class="accordion-body">
+<div class="option-grid">
+<div class="option-block">
+<h4>What is it?</h4>
+<p>A non-standard network design that could involve VPN, private routing, dedicated infrastructure or a sovereign deployment arrangement.</p>
+</div>
+<div class="option-block">
+<h4>When would it be considered?</h4>
+<p>Only when an Integration Gateway or enterprise middleware cannot satisfy the customer's security, regulatory or architectural requirements.</p>
+</div>
+<div class="option-block">
+<h4>What must be confirmed?</h4>
+<ul>
+<li>Hosting and networking model</li>
+<li>Security and support ownership</li>
+<li>Commercial implications</li>
+<li>Availability in the selected region</li>
+</ul>
+</div>
+<div class="option-block">
+<h4>Positioning</h4>
+<p>This is not standard shared-SaaS functionality and requires formal validation with NiCE/Cognigy Architecture.</p>
+</div>
+</div>
+</div></details>
+</div>
+<div class="callout warn"><strong>Key distinction:</strong> an Extension adds custom product logic. A Integration Gateway, middleware layer or bespoke network design addresses the network and trust boundary.</div>
+<div class="section-faq"><h3>Common questions</h3><details><summary>Do internal APIs have to be fully public?</summary><div class="answer">No. A tightly controlled Integration Gateway or middleware relay can be internet-addressable while core systems remain private.</div></details><details><summary>Can Cognigy connect through a VPN by default?</summary><div class="answer">No. VPN or private networking is a special design that requires architecture and commercial validation.</div></details><details><summary>Can a Cognigy Extension create private connectivity?</summary><div class="answer">No. An Extension adds custom logic but still requires a reachable service, Integration Gateway or middleware layer.</div></details><details><summary>Who maintains a custom Extension?</summary><div class="answer">The customer owns the code, repository, testing, dependencies and ongoing maintenance.</div></details></div></section><section class="page" id="crm-connectivity">
+<div class="eyebrow">4 · Enterprise CRM connectivity</div>
+<h2>Microsoft Dynamics 365 and Salesforce</h2>
+<p class="section-kicker">Connect Cognigy AI Agents to CRM data, workflows and customer-engagement channels while the CRM remains the system of record.</p>
+<div class="presenter-cheat">
+<h3>Presenter cheat sheet</h3>
+<ul>
+<li>Cognigy sits alongside Dynamics 365 or Salesforce as the conversational AI and orchestration layer.</li>
+<li>The CRM remains the system of record for customer, account, case, sales and service information.</li>
+<li>Cognigy can retrieve CRM data, create and update records, and write interaction outcomes back to the customer timeline.</li>
+<li>The integration is bidirectional: conversations can trigger CRM actions, and CRM events can initiate proactive journeys.</li>
+<li>CRM communication capabilities can be used as channels or agent workspaces while Cognigy provides the automated AI experience.</li>
+<li>Access should be limited to approved objects, fields and operations using OAuth and least-privilege permissions.</li>
+</ul>
+</div>
+<div class="demo-intro">
+<h3>Talk track</h3>
+<p>“Cognigy does not replace Dynamics 365 or Salesforce. It provides the conversational layer that allows customers and employees to interact naturally with the CRM. The AI Agent can retrieve approved information, complete governed updates, create service records and preserve context when the conversation moves to a human agent.”</p>
+</div>
+<div class="crm-tabs">
+<button class="crm-tab-btn active" data-crm-target="crm-0" type="button">1. Overview</button>
+<button class="crm-tab-btn" data-crm-target="crm-1" type="button">2. Pulling CRM Data</button>
+<button class="crm-tab-btn" data-crm-target="crm-2" type="button">3. Pushing CRM Data</button>
+<button class="crm-tab-btn" data-crm-target="crm-3" type="button">4. CRM Channels</button>
+<button class="crm-tab-btn" data-crm-target="crm-4" type="button">5. Proactive Journeys</button>
+<button class="crm-tab-btn" data-crm-target="crm-5" type="button">6. Dynamics vs Salesforce</button>
+</div>
+<div class="crm-tab-panel active" id="crm-0">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Explain the four ways Cognigy interacts with enterprise CRM platforms.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li><strong>Pull:</strong> retrieve approved customer, account, case or opportunity information.</li>
+<li><strong>Push:</strong> create, update or close CRM records through governed APIs.</li>
+<li><strong>Embed:</strong> surface AI capabilities inside the existing service or sales workspace.</li>
+<li><strong>Trigger:</strong> use CRM events to initiate proactive WhatsApp, SMS, email or voice journeys.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>The CRM owns the record; Cognigy owns the conversation and AI orchestration.</p></div>
+</div>
+<div class="crm-flow">
+<div class="step">Customer Channel</div><div class="arrow">→</div>
+<div class="step">Cognigy AI Agent</div><div class="arrow">→</div>
+<div class="step">Identity &amp; Permissions</div><div class="arrow">→</div>
+<div class="step">Integration Gateway / API</div><div class="arrow">→</div>
+<div class="step">Dynamics 365 or Salesforce</div>
+</div>
+<div class="crm-product-grid">
+<div class="crm-product-card"><h4>Microsoft Dynamics 365</h4><ul class="cheat">
+<li>Dataverse and standard or custom tables</li>
+<li>Customer Service, Sales and Field Service scenarios</li>
+<li>Contacts, accounts, cases, activities and opportunities</li>
+<li>Microsoft channels and agent workspace integration</li>
+</ul></div>
+<div class="crm-product-card"><h4>Salesforce</h4><ul class="cheat">
+<li>Standard and custom Salesforce objects</li>
+<li>Service Cloud and Sales Cloud scenarios</li>
+<li>Contacts, accounts, cases, leads and opportunities</li>
+<li>Digital Engagement and agent workspace integration</li>
+</ul></div>
+</div>
+</div>
+<div class="crm-tab-panel" id="crm-1">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Show how Cognigy securely retrieves CRM information during a live conversation.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>The AI Agent establishes intent and performs identity verification where required.</li>
+<li>Cognigy calls an approved CRM API or middleware service using a governed Connection.</li>
+<li>Only permitted records and fields are returned and used to answer the customer.</li>
+<li>Transient data should be retained only for as long as required by the conversation and policy.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>The AI receives useful CRM context without broad or unrestricted platform access.</p></div>
+</div>
+<div class="crm-product-grid">
+<div class="crm-product-card"><h4>Dynamics 365 — common retrievals</h4><ul class="cheat">
+<li>Contact and account profile</li><li>Active cases and status</li><li>Activities and interaction history</li>
+<li>Orders, entitlements or service records</li><li>Opportunities and sales context</li><li>Custom Dataverse tables</li>
+</ul></div>
+<div class="crm-product-card"><h4>Salesforce — common retrievals</h4><ul class="cheat">
+<li>Contact and account profile</li><li>Cases and service history</li><li>Tasks, events and activities</li>
+<li>Leads and opportunities</li><li>Knowledge and entitlement context</li><li>Custom Salesforce objects</li>
+</ul></div>
+</div>
+<div class="crm-callout"><strong>Design principle:</strong> retrieve the minimum data needed for the current task. Protected information should only be returned after the required identity and authorisation checks.</div>
+</div>
+<div class="crm-tab-panel" id="crm-2">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Explain how Cognigy completes governed CRM actions rather than only answering questions.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>The AI Agent gathers and validates the information required for the action.</li>
+<li>Deterministic rules can check identity, mandatory fields, consent and eligibility.</li>
+<li>Cognigy calls the approved CRM operation and confirms the result from the CRM response.</li>
+<li>Sensitive changes can require explicit confirmation or human approval.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Generative AI manages the conversation; deterministic controls govern the transaction.</p></div>
+</div>
+<div class="compact-grid">
+<div class="mini-card"><h4>Create</h4><ul class="cheat"><li>Case or complaint</li><li>Lead or opportunity</li><li>Callback or appointment</li><li>Interaction record</li></ul></div>
+<div class="mini-card"><h4>Update</h4><ul class="cheat"><li>Contact details</li><li>Case status or notes</li><li>Lead qualification</li><li>Conversation summary</li></ul></div>
+<div class="mini-card"><h4>Complete or close</h4><ul class="cheat"><li>Resolve a case</li><li>Complete an activity</li><li>Close a task</li><li>Record an outcome</li></ul></div>
+<div class="mini-card"><h4>Governance controls</h4><ul class="cheat"><li>Identity verification</li><li>Customer confirmation</li><li>Field validation</li><li>Audit trail</li></ul></div>
+</div>
+</div>
+<div class="crm-tab-panel" id="crm-3">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Explain how CRM platforms participate in the customer channel and agent experience.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>Cognigy handles automated voice and digital conversations before human handover.</li>
+<li>The CRM workspace can receive transcript, identity, intent and business context.</li>
+<li>Where the CRM provides messaging or agent-channel capabilities, Cognigy integrates into that wider architecture.</li>
+<li>Channel ownership, routing and agent desktop configuration remain customer responsibilities.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy enhances the CRM channel experience while agents remain in their familiar desktop.</p></div>
+</div>
+<div class="crm-product-grid">
+<div class="crm-product-card"><h4>Dynamics 365 channel patterns</h4><ul class="cheat">
+<li>Dynamics 365 Customer Service workspace</li><li>Omnichannel or connected digital messaging</li>
+<li>Embedded chat or messaging experiences</li><li>Case timeline and activity updates</li><li>Agent Assist surfaced in the workspace</li>
+</ul></div>
+<div class="crm-product-card"><h4>Salesforce channel patterns</h4><ul class="cheat">
+<li>Service Cloud workspace</li><li>Digital Engagement and messaging</li><li>Omni-Channel routing</li>
+<li>Case feed and interaction timeline</li><li>Embedded AI or Agent Assist experience</li>
+</ul></div>
+</div>
+<div class="crm-callout"><strong>Presenter note:</strong> the final design depends on CRM licences, the existing CCaaS platform, channel ownership and preferred agent desktop. NiCE/Cognigy would not normally configure the customer’s CRM environment.</div>
+</div>
+<div class="crm-tab-panel" id="crm-4">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Show how CRM events can initiate proactive, personalised AI journeys.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>A CRM event, workflow or campaign identifies that customer action is required.</li>
+<li>An approved communications platform starts a WhatsApp, SMS, email or voice interaction.</li>
+<li>Cognigy handles the personalised conversation and retrieves additional CRM context.</li>
+<li>The outcome, consent and next action are written back to the CRM.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>The CRM triggers the journey, Cognigy conducts the conversation, and the outcome returns to the CRM.</p></div>
+</div>
+<div class="crm-flow">
+<div class="step">CRM Event</div><div class="arrow">→</div><div class="step">Workflow / Campaign</div><div class="arrow">→</div>
+<div class="step">Approved Channel</div><div class="arrow">→</div><div class="step">Cognigy AI Agent</div><div class="arrow">→</div>
+<div class="step">CRM Outcome Update</div>
+</div>
+</div>
+<div class="crm-tab-panel" id="crm-5">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Compare the platforms without positioning one as superior.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>Both platforms support governed, bidirectional API integration.</li>
+<li>Dynamics uses Dataverse and Microsoft service components; Salesforce uses standard and custom objects across its clouds.</li>
+<li>The right design depends on the customer’s data model, licences, channel architecture and integration standards.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy follows the customer’s CRM architecture rather than imposing a proprietary data model.</p></div>
+</div>
+<table class="crm-capability-table">
+<thead><tr><th>Capability</th><th>Microsoft Dynamics 365</th><th>Salesforce</th></tr></thead>
+<tbody>
+<tr><td>Customer and account lookup</td><td>Contacts and Accounts</td><td>Contacts and Accounts</td></tr>
+<tr><td>Service records</td><td>Cases and Customer Service tables</td><td>Cases and Service Cloud objects</td></tr>
+<tr><td>Sales records</td><td>Leads and Opportunities</td><td>Leads and Opportunities</td></tr>
+<tr><td>Custom data model</td><td>Custom Dataverse tables</td><td>Custom Objects</td></tr>
+<tr><td>API integration</td><td>Dataverse and Dynamics APIs</td><td>Salesforce APIs</td></tr>
+<tr><td>Authentication</td><td>OAuth through Microsoft identity services</td><td>OAuth through Salesforce connected applications</td></tr>
+<tr><td>Agent workspace</td><td>Dynamics 365 Customer Service</td><td>Salesforce Service Cloud</td></tr>
+<tr><td>Digital engagement</td><td>Customer Service and connected channels</td><td>Digital Engagement and Omni-Channel</td></tr>
+<tr><td>Proactive journeys</td><td>CRM workflows and Microsoft automation services</td><td>CRM automation, events and campaign workflows</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section-faq">
+<h3>Common questions</h3>
+<details><summary>Does Cognigy replace Dynamics 365 or Salesforce?</summary><div class="answer">No. The CRM remains the system of record. Cognigy provides conversational AI, orchestration and governed access to CRM capabilities.</div></details>
+<details><summary>Can Cognigy read and update CRM data?</summary><div class="answer">Yes. Cognigy can retrieve, create and update approved records through CRM APIs or a customer-managed integration layer.</div></details>
+<details><summary>Can the AI update records automatically?</summary><div class="answer">Yes, subject to identity checks, validation rules, permissions, customer confirmation and approval controls.</div></details>
+<details><summary>Does the CRM need to be exposed directly to the internet?</summary><div class="answer">Not necessarily. Cognigy can call an Integration Gateway or middleware service that communicates privately with the CRM or internal systems.</div></details>
+<details><summary>Can CRM events start an outbound conversation?</summary><div class="answer">Yes. A CRM workflow or event can initiate a journey through an approved communications platform, with Cognigy conducting the AI conversation and writing the outcome back.</div></details>
+<details><summary>Can agents remain inside their CRM desktop?</summary><div class="answer">Yes. Transcript, customer context, intent and outcomes can be passed into the Dynamics 365 or Salesforce workspace, subject to the customer’s architecture.</div></details>
+<details><summary>Who configures the CRM?</summary><div class="answer">The customer or CRM implementation partner normally configures CRM permissions, objects, workflows, routing and workspace components. NiCE/Cognigy supports the Cognigy-side configuration and integration design.</div></details>
+</div>
+</section>
+<section class="page" id="demo-ops-centre">
+<div class="eyebrow">4.1 · Demo guide</div>
+<h2>AI Ops Centre</h2>
+<p class="section-kicker">Move through platform health, component performance, alerting and root-cause analysis without scrolling through one long page.</p>
+<details class="collapsible-note" open="">
+<summary>Presenter cheat sheet</summary>
+<div class="collapsible-body">
+<ul>
+<li>As AI Agents scale, the challenge moves from building them to operating them reliably 24/7.</li>
+<li>Ops Centre provides one place to understand traffic, latency, component health and errors.</li>
+<li>Alerts help teams move from reactive firefighting to proactive intervention.</li>
+<li>When something fails, teams can isolate whether the issue sits with an endpoint, Flow, transformer, API or provider.</li>
+<li>The outcome is operational confidence to scale AI safely.</li>
+</ul>
+</div>
+</details>
+<div class="demo-intro">
+<h3>Opening narrative</h3>
+<p>“As organisations deploy more AI Agents, three challenges emerge: managing scale, maintaining visibility and controlling operational risk. Ops Centre applies the same operational disciplines used for a human workforce to an AI workforce.”</p>
+</div>
+<div class="demo-tabs" role="tablist"><button class="demo-tab-btn active" data-demo-group="opscentre" data-demo-target="opscentre-0" type="button">1. Overview</button><button class="demo-tab-btn" data-demo-group="opscentre" data-demo-target="opscentre-1" type="button">2. Endpoints</button><button class="demo-tab-btn" data-demo-group="opscentre" data-demo-target="opscentre-2" type="button">3. Flows &amp; APIs</button><button class="demo-tab-btn" data-demo-group="opscentre" data-demo-target="opscentre-3" type="button">4. Alerts</button><button class="demo-tab-btn" data-demo-group="opscentre" data-demo-target="opscentre-4" type="button">5. Notifications</button><button class="demo-tab-btn" data-demo-group="opscentre" data-demo-target="opscentre-5" type="button">6. Errors &amp; Root Cause</button><button class="demo-tab-btn" data-demo-group="opscentre" data-demo-target="opscentre-6" type="button">7. Closing</button></div><div class="demo-tab-panel active" id="opscentre-0">
+<div class="screen-frame">
+<img alt="Cognigy Operations Center overview" src="images/operations-centre-overview.png"/>
+<div class="screen-caption">Operations Center overview showing active alerts, error volume, messages and component health across endpoints, Flows and handover providers.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Introduce the overall health of the AI estate and show that operations teams have a single operational view.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>This is the operational dashboard for the AI workforce, showing traffic, errors, alerts and component health in one place.</li><li>Red indicators immediately highlight where investigation is required, while healthy services remain visible alongside them.</li><li>The aim is to identify emerging issues before customers notice a degradation in service.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Operations teams have immediate visibility into the overall health of every AI Agent and its supporting services.</p></div></div>
+</div><div class="demo-tab-panel" id="opscentre-1">
+<div class="screen-frame">
+<img alt="Cognigy Operations Center endpoint metrics" src="images/operations-centre-endpoint-metrics.png"/>
+<div class="screen-caption">Endpoint metrics showing traffic, message-processing time, transformer performance and transformer errors.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how individual customer endpoints and preprocessing components are monitored.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Here we can monitor endpoint traffic, message-processing time and transformer performance.</li><li>If response times begin to increase, we can determine whether the issue starts at the channel endpoint or during transformation.</li><li>Error counts and latency trends allow teams to isolate affected channels without treating the whole platform as one black box.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Endpoint and transformer issues can be isolated before they affect the wider AI estate.</p></div></div>
+</div><div class="demo-tab-panel" id="opscentre-2">
+<div class="screen-frame">
+<img alt="Cognigy Operations Center Flow metrics" src="images/operations-centre-flow-metrics.png"/>
+<div class="screen-caption">Flow metrics showing execution time, outbound HTTP request volume and latency, with additional NLU, LLM and Knowledge AI components available.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Demonstrate end-to-end monitoring across every component involved in an Agentic AI interaction.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Cognigy monitors each execution component separately, including Flow runtime, outbound API calls, Knowledge AI, NLU and LLM activity.</li><li>For each component we can inspect volumes, processing time, latency and failures to identify exactly where performance is degrading.</li><li>This is especially important for Agentic AI because one customer response may depend on several reasoning steps, tool calls and external services.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy provides component-level observability across the full Agentic AI execution path, making latency and dependency issues easier to identify.</p></div></div>
+</div><div class="demo-tab-panel" id="opscentre-3">
+<div class="screen-frame">
+<img alt="Cognigy Operations Center manage alerts" src="images/operations-centre-manage-alerts.png"/>
+<div class="screen-caption">Manage Alerts view showing configurable alert categories such as message volume, transformer errors, HTTP failures, LLM errors and Knowledge AI errors.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how teams move from passive monitoring to proactive alerting.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Alert categories can be enabled for meaningful operational conditions such as message spikes, HTTP failures, transformer errors or LLM issues.</li><li>Teams decide which conditions matter rather than receiving noise for every minor fluctuation.</li><li>This allows operations to respond before a technical issue becomes a visible customer problem.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Operational teams are alerted to meaningful changes before customers are affected.</p></div></div>
+</div><div class="demo-tab-panel" id="opscentre-4">
+<div class="screen-frame">
+<img alt="Cognigy Operations Center alert notifications" src="images/operations-centre-alert-notifications.png"/>
+<div class="screen-caption">Alert notification configuration showing email and webhook delivery options.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how Cognigy alerts integrate into existing operational processes.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Notifications can be delivered by email for direct operational awareness.</li><li>Webhook delivery allows Cognigy alerts to feed existing ITSM, incident-management or observability platforms.</li><li>The AI estate can therefore be managed through the same operational workflows already used elsewhere in the organisation.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>AI monitoring fits into existing enterprise support and incident-management processes.</p></div></div>
+</div><div class="demo-tab-panel" id="opscentre-5">
+<div class="screen-frame">
+<img alt="Cognigy Operations Center error details" src="images/operations-centre-error-details.png"/>
+<div class="screen-caption">Error view showing the error code, message, project, Flow and node, with the ability to navigate directly to the affected Flow.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Demonstrate fast root-cause analysis when an issue occurs.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Each error identifies the code, message, project, Flow and node involved.</li><li>Teams can move directly from the operational symptom to the exact component that requires attention.</li><li>This reduces time spent searching through logs and accelerates recovery.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Faster root-cause isolation means faster resolution and less customer impact.</p></div></div>
+</div><div class="demo-tab-panel" id="opscentre-6">
+<div class="demo-close">
+<strong>Closing line</strong>
+“Ultimately, Cognigy Ops Centre provides the operational confidence to scale AI safely, ensuring AI Agents remain healthy, customers remain supported and optimisation becomes proactive rather than reactive.”
+</div>
+<div class="screenshot-note"><strong>Suggested flow:</strong> Overview → Endpoints → Flows &amp; APIs → Alerts → Notifications → Errors &amp; Root Cause.</div>
+</div><div class="section-faq"><h3>Common questions</h3><details><summary>What does Ops Centre monitor?</summary><div class="answer">It monitors component health across endpoints, transformers, Flows, API calls, LLMs, Knowledge AI and other execution dependencies.</div></details><details><summary>Can alerts feed existing tooling?</summary><div class="answer">Yes. Alerts can be delivered by email or webhook into existing operational workflows.</div></details><details><summary>Why is component latency important for Agentic AI?</summary><div class="answer">One response may involve multiple reasoning steps, tools and services. Component-level latency helps isolate the exact bottleneck.</div></details></div></section><section class="page" id="demo-agentic-analytics">
+<div class="eyebrow">4.2 · Demo guide</div>
+<h2>Insights &amp; Agentic Analytics</h2>
+<p class="section-kicker">Move through operational reporting, conversation detail, configuration and AI analysis using the sub-tabs.</p>
+<details class="collapsible-note" open="">
+<summary>Presenter cheat sheet</summary>
+<div class="collapsible-body">
+<ul>
+<li>Operational reporting shows adoption, containment, engagement and conversation volumes.</li>
+<li>Conversation views provide transcript and metadata visibility for quality and investigation.</li>
+<li>Agentic Analytics evaluates LLM-powered conversations for topics, sentiment, escalations, resolution and custom criteria.</li>
+<li>Analysis can be scheduled for selected channels, endpoints or AI Agent versions.</li>
+<li>Analytics APIs allow this data to be combined with wider enterprise BI and outcome reporting.</li>
+</ul>
+</div>
+</details>
+<div class="demo-intro">
+<h3>Opening narrative</h3>
+<p>“Operational metrics only tell part of the story. Agentic AI introduces new questions around reasoning quality, new customer topics, knowledge gaps and whether the interaction delivered a meaningful outcome.”</p>
+</div>
+<div class="demo-tabs" role="tablist"><button class="demo-tab-btn active" data-demo-group="analytics" data-demo-target="analytics-0" type="button">1. Overview</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-1" type="button">2. Engagement</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-2" type="button">3. Conversations</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-3" type="button">4. Configuration</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-4" type="button">5. Topic Discovery</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-5" type="button">6. Basic Analysis</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-6" type="button">7. Custom Evaluation</button><button class="demo-tab-btn" data-demo-group="analytics" data-demo-target="analytics-7" type="button">8. Closing &amp; BI</button></div><div class="demo-tab-panel active" id="analytics-0">
+<div class="screen-frame">
+<img alt="Cognigy Insights overview report" src="images/insights-overview-report.png"/>
+<div class="screen-caption">Insights Overview showing active and total sessions, containment, session trends, channel mix, users by locale and input volume.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Establish the scale, adoption and operational performance of the AI estate.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>The Overview shows session volumes, containment, channel mix and usage trends.</li><li>It provides the executive-level operational picture before moving into deeper engagement or quality analysis.</li><li>This answers the first question: how much is the AI being used and how much demand is it handling?</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Start with adoption and operational performance before assessing conversation quality.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-1">
+<div class="screen-frame">
+<img alt="Cognigy Insights engagement report" src="images/insights-engagement-report.png"/>
+<div class="screen-caption">Engagement Report showing session length, containment and handover behaviour over time.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how customers are engaging with the AI and where journeys move to a human agent.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Engagement metrics show session length, containment and handover behaviour over time.</li><li>These trends help identify where customers remain engaged and where automation breaks down.</li><li>The data can reveal journeys that need optimisation or further automation.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Engagement reporting explains how customers use the AI and where escalation occurs.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-2">
+<div class="screen-frame">
+<img alt="Cognigy Insights conversations and transcript view" src="images/insights-conversations-transcript.png"/>
+<div class="screen-caption">Conversation list with filters, metadata, analysis state and the full interaction transcript.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Connect aggregate analytics back to the underlying customer conversation.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>The Conversations view provides session metadata, message counts, timestamps and analysis status.</li><li>Teams can open the full transcript to understand the context behind a metric or result.</li><li>This makes analytics transparent and traceable down to the individual interaction.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Every insight can be investigated against the original conversation.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-3">
+<div class="screen-frame">
+<img alt="Cognigy Agentic Analytics configuration" src="images/agentic-analytics-configuration.png"/>
+<div class="screen-caption">Configuration view for topic selection, analysis schedule, filters, standard analysis criteria and custom evaluations.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how Agentic Analytics is targeted and scheduled.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Analysis can be scheduled daily or weekly for a specific endpoint, channel, snapshot or AI Agent version.</li><li>Customers can enable standard criteria and add custom evaluations aligned to their own objectives.</li><li>This ensures the analysis is focused on the exact experience being measured.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Analytics can be tailored to the right Agent, channel, version and business objective.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-4">
+<div class="screen-frame">
+<img alt="Cognigy Agentic Analytics topic discovery" src="images/agentic-analytics-topic-discovery.png"/>
+<div class="screen-caption">Topic Discovery showing parent and child conversation drivers, mapped coverage and new topics found.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Reveal what customers are actually asking about, including unexpected topics.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Topic Discovery groups conversation drivers into parent and child themes.</li><li>It highlights coverage, overlap and new topics that were not part of the original design.</li><li>These findings identify knowledge gaps and new automation opportunities.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Topic discovery turns real conversations into a roadmap for improvement.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-5">
+<div class="screen-frame">
+<img alt="Cognigy Agentic Analytics basic analysis" src="images/agentic-analytics-basic-analysis.png"/>
+<div class="screen-caption">Basic Analysis showing sentiment, emotional intensity, escalation risk, resolution, instruction following and tool usage.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Evaluate the quality and behaviour of LLM-powered conversations.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Basic Analysis reviews sentiment, emotional intensity, escalation risk and resolution.</li><li>It also evaluates instruction following and whether tools were used correctly.</li><li>This goes beyond operational reporting and measures how well the Agentic AI behaved.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Agentic Analytics evaluates conversation quality, not just volume and containment.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-6">
+<div class="screen-frame">
+<img alt="Cognigy Agentic Analytics custom evaluation" src="images/agentic-analytics-custom-evaluation.png"/>
+<div class="screen-caption">Custom Evaluation showing organisation-defined measures such as reasoning quality, business outcomes, recovery and information gathering.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Measure AI performance against organisation-specific outcomes.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Custom evaluations can score reasoning quality, recovery from failure, information gathering and business outcomes.</li><li>The measures can reflect regulatory, service or commercial priorities.</li><li>This allows AI performance to be assessed against what the organisation actually values.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Custom evaluation connects AI behaviour directly to business objectives.</p></div></div>
+</div><div class="demo-tab-panel" id="analytics-7">
+<div class="demo-close">
+<strong>Closing line</strong>
+“Cognigy combines operational visibility with deeper Agentic Analytics, helping organisations prove business value, uncover optimisation opportunities and measure AI performance alongside wider enterprise outcomes.”
+</div>
+<div class="screenshot-note"><strong>BI message:</strong> Cognigy provides APIs so analytics data can be integrated into existing enterprise BI and data platforms.</div>
+</div><div class="section-faq"><h3>Common questions</h3><details><summary>What is the difference between Insights and Agentic Analytics?</summary><div class="answer">Insights focuses on operational usage and engagement. Agentic Analytics evaluates conversation quality, topics, escalation, resolution and custom criteria.</div></details><details><summary>Can analysis target a specific Agent version?</summary><div class="answer">Yes. Analysis can be scheduled and filtered by endpoint, channel, snapshot or Agent version.</div></details><details><summary>Can the data be exported to enterprise BI?</summary><div class="answer">Yes. Cognigy provides APIs so analytics can be combined with wider business reporting.</div></details></div></section><section class="page" id="demo-simulator">
+<div class="eyebrow">4.3 · Demo guide</div>
+<h2>Simulator</h2>
+<p class="section-kicker">Use the tabs below to move between scenario design, scale testing and results without scrolling through one long page.</p>
+<details class="collapsible-note" open="">
+<summary>Presenter cheat sheet</summary>
+<div class="collapsible-body">
+<ul>
+<li>Agentic AI creates thousands of possible outcomes, making traditional manual UAT impractical.</li>
+<li>Simulator creates realistic tests using personas, missions and measurable success criteria.</li>
+<li>Scenarios can be created manually, from transcripts or from the AI Agent prompt.</li>
+<li>Large volumes of simulated conversations can test edge cases and regressions quickly.</li>
+<li>The outcome is repeatable automated QA as prompts, knowledge, tools or models change.</li>
+</ul>
+</div>
+</details>
+<div class="demo-intro">
+<h3>Opening narrative</h3>
+<p>“With traditional bots, testers validated a limited number of predefined paths. Agentic AI can reason, adapt and call tools, so testing every possible outcome manually is no longer practical.”</p>
+</div>
+<div class="demo-tabs" role="tablist"><button class="demo-tab-btn active" data-demo-group="simulator" data-demo-target="simulator-0" type="button">1. Scenario Design</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-1" type="button">2. Run at Scale</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-2" type="button">3. Results &amp; Failures</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-3" type="button">4. Closing</button></div><div class="demo-tab-panel active" id="simulator-0">
+<div class="screen-frame">
+<img alt="Cognigy Simulator scenario editor" src="images/simulator-scenario-editor.png"/>
+<div class="screen-caption">Scenario Editor: define the persona, mission and success criteria used to judge the AI Agent.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how realistic customer scenarios and measurable test criteria are created.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>The persona defines how the simulated customer behaves, while the mission defines what they are trying to achieve.</li><li>Success criteria describe exactly how the AI Agent should be judged.</li><li>Scenarios can be built manually, from transcripts or from the Agent prompt.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Simulator tests realistic customer behaviour against business-defined success criteria.</p></div></div>
+<details class="demo-question">
+<summary>Question: How do we create realistic tests?</summary>
+<div class="demo-question-body"><ul><li>Create scenarios manually, from transcripts or from the AI Agent prompt.</li><li>Define personality traits and expected customer behaviour.</li><li>Define the mission and measurable success criteria.</li></ul></div>
+</details>
+</div><div class="demo-tab-panel" id="simulator-1">
+<div class="screen-frame">
+<img alt="Cognigy Simulator run dashboard" src="images/simulator-run-dashboard.png"/>
+<div class="screen-caption">Simulation run overview showing success rate, criteria achieved, sentiment, average turns and individual runs.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Demonstrate automated testing at a scale that manual UAT cannot achieve.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Multiple conversations can be run simultaneously against the same scenario.</li><li>This produces evidence across different responses, edge cases and reasoning paths.</li><li>Testing can be repeated whenever prompts, models, tools or knowledge change.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Automated simulation turns large-scale UAT into a repeatable process.</p></div></div>
+</div><div class="demo-tab-panel" id="simulator-2">
+<div class="screen-frame">
+<img alt="Cognigy Simulator success criteria results" src="images/simulator-success-criteria-results.png"/>
+<div class="screen-caption">Results view showing criteria performance, turn distribution and pass/fail status across each simulation run.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how test failures are identified and used to improve the AI Agent.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Results are broken down by success criterion, run status, sentiment and turn count.</li><li>Teams can identify which criteria failed and open the underlying simulated conversation.</li><li>The feedback can then be used to refine prompts, knowledge or tool behaviour.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Simulator explains where and why an Agent failed, not simply that it failed.</p></div></div>
+<details class="collapsible-note">
+<summary>Alternative results screenshot</summary>
+<div class="collapsible-body">
+<div class="screen-frame">
+<img alt="Alternative Cognigy Simulator results dashboard" src="images/simulator-success-criteria-results.png"/>
+<div class="screen-caption">A second results view can be used where the figures or criteria are more suitable for the customer story.</div>
+</div>
+</div>
+</details>
+</div><div class="demo-tab-panel" id="simulator-3">
+<div class="demo-close">
+<strong>Closing line</strong>
+“Cognigy Simulator enables automated QA at scale, helping teams validate realistic customer behaviour, edge cases and changes before they affect production interactions.”
+</div>
+<div class="screenshot-note"><strong>Suggested flow:</strong> Scenario Design → Run at Scale → Results &amp; Failures → open one failed run and explain what would be changed.</div>
+</div><div class="section-faq"><h3>Common questions</h3><details><summary>How are scenarios created?</summary><div class="answer">They can be created manually, from transcripts or from the AI Agent prompt.</div></details><details><summary>What does Simulator evaluate?</summary><div class="answer">It evaluates conversations against defined personas, missions and success criteria.</div></details><details><summary>Why run simulations regularly?</summary><div class="answer">Repeated simulation helps identify regressions when prompts, models, knowledge or tools change.</div></details></div></section><section class="page" id="data">
+<div class="eyebrow">5 · Security &amp; governance</div>
+<h2>InfoSec, data governance and enterprise assurance</h2>
+<p class="section-kicker">Use the tabs below to move between data handling, security architecture, compliance and post-interaction governance.</p>
+<div class="presenter-cheat">
+<h3>Presenter cheat sheet</h3>
+<ul>
+<li>Cognigy is an enterprise-grade SaaS platform with controls across infrastructure, platform and application layers.</li>
+<li>Core customer and business data remains in the customer’s own systems; Cognigy is not the system of record.</li>
+<li>Data is protected through encryption, access controls, secure credentials, retention policies, masking and redaction.</li>
+<li>Transcripts, tool calls and API actions can be logged and audited for operational and compliance purposes.</li>
+<li>Cognigy operates under formal security and compliance programmes, including ISO 27001 and SOC 2 Type II.</li>
+</ul>
+</div>
+<div class="demo-intro">
+<h3>Talk track</h3>
+<p>“Cognigy is designed to help organisations adopt AI without losing control of data, security or governance. The platform secures the underlying service, while customers retain ownership of their business data, policies and access rules.”</p>
+</div>
+<div class="security-tabs" role="tablist">
+<button class="security-tab-btn active" data-security-target="security-0" type="button">1. InfoSec &amp; Data Governance</button>
+<button class="security-tab-btn" data-security-target="security-1" type="button">2. Security Architecture</button>
+<button class="security-tab-btn" data-security-target="security-2" type="button">3. Compliance &amp; Assurance</button>
+<button class="security-tab-btn" data-security-target="security-3" type="button">4. Post-Interaction Governance</button>
+</div>
+<div class="security-tab-panel active" id="security-0">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Explain how Cognigy handles operational data while the customer retains ownership of core business data.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>Cognigy is not a CRM, policy or claims platform; those systems remain the source of truth.</li>
+<li>Cognigy may store operational data such as transcripts, logs and analytics according to configured retention policies.</li>
+<li>Sensitive values can be masked, redacted or removed, while expired data can be deleted automatically using TTL policies.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy processes and orchestrates interactions, but long-term ownership of business data remains with the customer.</p></div>
+</div>
+<div class="compact-grid">
+<div class="mini-card"><h4>Data ownership</h4><ul class="cheat"><li>Core records stay in customer systems</li><li>Accessed through approved integrations</li></ul></div>
+<div class="mini-card"><h4>Retention</h4><ul class="cheat"><li>Configurable policies</li><li>Automatic deletion when TTL expires</li><li>Aligned to customer policy</li></ul></div>
+<div class="mini-card"><h4>Masking &amp; redaction</h4><ul class="cheat"><li>Mask sensitive values</li><li>Avoid unnecessary PII</li><li>Overwrite data when no longer needed</li></ul></div>
+</div>
+</div>
+<div class="security-tab-panel" id="security-1">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Show that security is applied through a defence-in-depth model rather than a single control.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>Data is encrypted in transit and at rest, while credentials are stored in secure Connections.</li>
+<li>Access is governed using RBAC, MFA and auditable administrative access.</li>
+<li>Infrastructure, platform and runtime controls are continuously monitored and supported by operational security processes.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Security is built across the full lifecycle of the platform and the data it processes.</p></div>
+</div>
+<div class="compact-grid">
+<div class="mini-card"><h4>Infrastructure</h4><ul class="cheat"><li>NiCE-managed AWS</li><li>Network isolation</li><li>Monitoring and detection</li></ul></div>
+<div class="mini-card"><h4>Platform</h4><ul class="cheat"><li>Tenant separation</li><li>Encryption</li><li>Secure credential storage</li></ul></div>
+<div class="mini-card"><h4>Access</h4><ul class="cheat"><li>RBAC</li><li>MFA</li><li>Auditable administration</li></ul></div>
+<div class="mini-card"><h4>Operational</h4><ul class="cheat"><li>Penetration testing</li><li>Security training</li><li>Formal oversight</li></ul></div>
+</div>
+</div>
+<div class="security-tab-panel" id="security-2">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Explain how customers can independently assess Cognigy’s security and compliance posture.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>Cognigy operates formal security and compliance programmes that are independently audited.</li>
+<li>High-level assurance includes ISO 27001, SOC 2 Type II and support for UK GDPR obligations.</li>
+<li>Detailed reports and evidence are provided through the official trust and due-diligence process.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Security and compliance are continuously governed and independently assured.</p></div>
+</div>
+<div class="pills">
+<span class="pill">ISO/IEC 27001</span>
+<span class="pill">SOC 2 Type II</span>
+<span class="pill">UK GDPR support</span>
+<span class="pill">Independent audits</span>
+<span class="pill">Penetration testing</span>
+<span class="pill">Trust &amp; compliance portal</span>
+</div>
+<div class="callout warn"><strong>Presenter note:</strong> use the official Trust Centre and due-diligence process for current evidence and certification scope.</div>
+</div>
+<div class="security-tab-panel" id="security-3">
+<div class="tab-talk-track">
+<div class="talk-block objective"><h4>Objective</h4><p>Explain how visibility, auditability and continuous improvement continue after interactions complete.</p></div>
+<div class="talk-block track"><h4>Talk track</h4><ul>
+<li>Transcripts can support quality assurance, operational monitoring and compliance review.</li>
+<li>Fallbacks, escalations, API calls and tool actions can be logged and audited.</li>
+<li>Real interaction data can help refine prompts, knowledge, fallback behaviour and evaluation criteria.</li>
+</ul></div>
+<div class="talk-block takeaway"><h4>Key takeaway</h4><p>Governance continues after go-live through monitoring, auditability and structured optimisation.</p></div>
+</div>
+<div class="compact-grid">
+<div class="mini-card"><h4>Transcripts</h4><ul class="cheat"><li>Quality review</li><li>Compliance verification</li><li>Behaviour investigation</li></ul></div>
+<div class="mini-card"><h4>Escalation monitoring</h4><ul class="cheat"><li>Track human handovers</li><li>Track deterministic fallbacks</li><li>Identify automation gaps</li></ul></div>
+<div class="mini-card"><h4>Tool &amp; API governance</h4><ul class="cheat"><li>Log tool executions</li><li>Trace API activity</li><li>Support assurance</li></ul></div>
+<div class="mini-card"><h4>Continuous improvement</h4><ul class="cheat"><li>Refine prompts</li><li>Improve knowledge</li><li>Adjust fallback behaviour</li></ul></div>
+</div>
+</div>
+<div class="section-faq"><h3>Common questions</h3><details><summary>Does Cognigy become the system of record?</summary><div class="answer">No. Core customer and business data remains in the customer’s existing systems.</div></details><details><summary>Can transcripts and operational data be deleted automatically?</summary><div class="answer">Yes. Retention and TTL policies can be configured according to the contracted environment and customer requirements.</div></details><details><summary>Can sensitive data be masked?</summary><div class="answer">Yes. Sensitive values can be masked, redacted or removed from logs, analytics and conversational context.</div></details><details><summary>Where can current compliance evidence be reviewed?</summary><div class="answer">Use the official Cognigy Trust Centre and due-diligence process for current certification scope and assurance reports.</div></details></div></section>
+</main>
+<script>
+const links=[...document.querySelectorAll('.nav-link')];
+const pages=[...document.querySelectorAll('.page')];
+function showPage(id){
+  pages.forEach(p=>p.classList.toggle('active',p.id===id));
+  links.forEach(l=>l.classList.toggle('active',l.dataset.page===id));
+  document.querySelector('main').scrollTop=0;
+  history.replaceState(null,'','#'+id);
+}
+links.forEach(l=>l.addEventListener('click',()=>showPage(l.dataset.page)));
+const initial=location.hash.replace('#','');
+if(initial && document.getElementById(initial)) showPage(initial);
+document.addEventListener('keydown',e=>{
+  if(!['ArrowLeft','ArrowRight'].includes(e.key))return;
+  const i=pages.findIndex(p=>p.classList.contains('active'));
+  const n=e.key==='ArrowRight'?Math.min(i+1,pages.length-1):Math.max(i-1,0);
+  showPage(pages[n].id);
+});
+</script>
+<script>
+const ccaasProviders = {
+  genesys: {
+    name: "Genesys Cloud",
+    status: "Fully customised",
+    customised: true,
+    note: "Genesys-specific digital, voice, routing and ownership guidance is currently available.",
+    platformTitle: "Where Cognigy fits with Genesys Cloud",
+    platformLead: "Cognigy sits between Genesys-managed customer channels and enterprise systems as the AI orchestration layer.",
+    bullets: [
+      "Owns voice and digital channel entry",
+      "Provides Architect, routing, queues and agent delivery",
+      "Uses supported bot and voice integration patterns",
+      "Supports live-agent handover with context"
+    ],
+    integrationTitle: "Genesys Cloud integration",
+    integrationText: "Digital, voice, channel ownership and live-agent handover."
+  },
+  cxone: {
+    name: "NiCE CXone",
+    status: "Generic guidance",
+    customised: false,
+    note: "CXone-specific content has not yet been added. Generic architecture guidance is shown.",
+    platformTitle: "Where Cognigy fits with NiCE CXone",
+    platformLead: "Cognigy provides AI orchestration alongside CXone channel, routing and agent capabilities.",
+    bullets: [
+      "CXone provides contact-centre routing and agent operations",
+      "Cognigy provides AI Agents, knowledge and orchestration",
+      "Voice and digital patterns require CXone-specific validation",
+      "Integration detail will vary by the chosen CXone services"
+    ],
+    integrationTitle: "NiCE CXone integration",
+    integrationText: "Generic guidance is shown until CXone-specific voice and digital patterns are added."
+  },
+  amazon: {
+    name: "Amazon Connect",
+    status: "Generic guidance",
+    customised: false,
+    note: "Amazon Connect-specific content has not yet been added. Generic architecture guidance is shown.",
+    platformTitle: "Where Cognigy fits with Amazon Connect",
+    platformLead: "Cognigy provides the AI orchestration layer alongside Amazon Connect contact flows, routing and agent operations.",
+    bullets: [
+      "Amazon Connect owns contact flows, routing and agent delivery",
+      "Cognigy owns the automated AI interaction",
+      "Digital and voice integration methods require validation",
+      "AWS-native middleware may be used where appropriate"
+    ],
+    integrationTitle: "Amazon Connect integration",
+    integrationText: "Generic guidance is shown until Amazon Connect-specific patterns are added."
+  },
+  cisco: {
+    name: "Cisco Webex Contact Center",
+    status: "Generic guidance",
+    customised: false,
+    note: "Cisco-specific content has not yet been added. Generic architecture guidance is shown.",
+    platformTitle: "Where Cognigy fits with Cisco Webex Contact Center",
+    platformLead: "Cognigy provides AI orchestration alongside Cisco-managed channels, routing and agent services.",
+    bullets: [
+      "Cisco owns channel delivery, routing and agents",
+      "Cognigy owns automated AI dialogue and orchestration",
+      "Connector and handover patterns require validation",
+      "Voice topology must be confirmed during design"
+    ],
+    integrationTitle: "Cisco Webex Contact Center integration",
+    integrationText: "Generic guidance is shown until Cisco-specific patterns are added."
+  },
+  five9: {
+    name: "Five9",
+    status: "Generic guidance",
+    customised: false,
+    note: "Five9-specific content has not yet been added. Generic architecture guidance is shown.",
+    platformTitle: "Where Cognigy fits with Five9",
+    platformLead: "Cognigy provides AI orchestration alongside Five9 channel, routing and agent capabilities.",
+    bullets: [
+      "Five9 owns contact-centre routing and agent operations",
+      "Cognigy owns AI Agents, tools and knowledge",
+      "Digital and voice integrations require validation",
+      "Handover context depends on the selected integration"
+    ],
+    integrationTitle: "Five9 integration",
+    integrationText: "Generic guidance is shown until Five9-specific patterns are added."
+  },
+  talkdesk: {
+    name: "Talkdesk",
+    status: "Generic guidance",
+    customised: false,
+    note: "Talkdesk-specific content has not yet been added. Generic architecture guidance is shown.",
+    platformTitle: "Where Cognigy fits with Talkdesk",
+    platformLead: "Cognigy provides AI orchestration alongside Talkdesk channel, routing and agent services.",
+    bullets: [
+      "Talkdesk owns channels, routing and agent operations",
+      "Cognigy owns automated AI conversation and orchestration",
+      "Voice and digital connectors require validation",
+      "Context transfer depends on the agreed design"
+    ],
+    integrationTitle: "Talkdesk integration",
+    integrationText: "Generic guidance is shown until Talkdesk-specific patterns are added."
+  },
+  generic: {
+    name: "Generic CCaaS",
+    status: "Generic guidance",
+    customised: false,
+    note: "Use this option for architecture discussions where the CCaaS provider has not yet been confirmed.",
+    platformTitle: "Where Cognigy fits with a CCaaS platform",
+    platformLead: "Cognigy sits between the selected channel platform and enterprise systems as the AI orchestration layer.",
+    bullets: [
+      "The CCaaS platform owns channels, routing and agents",
+      "Cognigy owns the automated AI interaction",
+      "Enterprise systems remain the source of truth",
+      "Detailed integration patterns require provider validation"
+    ],
+    integrationTitle: "Generic CCaaS integration",
+    integrationText: "Provider-neutral guidance for voice, digital, ownership and live-agent handover."
+  }
+};
+
+function updateCcaasProvider(providerKey) {
+  const provider = ccaasProviders[providerKey] || ccaasProviders.generic;
+  const status = document.getElementById("providerStatus");
+  const note = document.getElementById("providerNote");
+  const platformTitle = document.getElementById("providerPlatformTitle");
+  const platformLead = document.getElementById("providerPlatformLead");
+  const summaryTitle = document.getElementById("providerSummaryTitle");
+  const summaryList = document.getElementById("providerSummaryList");
+  const integrationTitle = document.getElementById("providerIntegrationTitle");
+  const bannerTitle = document.getElementById("providerBannerTitle");
+  const bannerText = document.getElementById("providerBannerText");
+  const genericDiagramProvider = document.getElementById("genericDiagramProvider");
+  const genericGuidance = document.getElementById("genericProviderGuidance");
+
+  status.textContent = provider.status;
+  status.classList.toggle("generic", !provider.customised);
+  note.textContent = provider.note;
+  platformTitle.textContent = provider.platformTitle;
+  platformLead.textContent = provider.platformLead;
+  summaryTitle.textContent = provider.name;
+  summaryList.innerHTML = provider.bullets.map(item => `<li>${item}</li>`).join("");
+  integrationTitle.textContent = provider.integrationTitle;
+  bannerTitle.textContent = provider.integrationTitle;
+  bannerText.textContent = provider.integrationText;
+  genericDiagramProvider.textContent = provider.name;
+
+  document.querySelectorAll('[data-provider-detail="genesys"]').forEach(el => {
+    el.style.display = provider.customised ? "" : "none";
+  });
+  genericGuidance.style.display = provider.customised ? "none" : "block";
+
+  localStorage.setItem("selectedCcaasProvider", providerKey);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const selector = document.getElementById("ccaasProvider");
+  const saved = localStorage.getItem("selectedCcaasProvider") || "genesys";
+  selector.value = ccaasProviders[saved] ? saved : "genesys";
+  updateCcaasProvider(selector.value);
+  selector.addEventListener("change", event => updateCcaasProvider(event.target.value));
+});
+</script>
+<script>
+document.addEventListener("click", function(event) {
+  const button = event.target.closest(".demo-tab-btn");
+  if (!button) return;
+  const group = button.getAttribute("data-demo-group");
+  const target = button.getAttribute("data-demo-target");
+
+  document.querySelectorAll('.demo-tab-btn[data-demo-group="' + group + '"]').forEach(btn => {
+    btn.classList.toggle("active", btn === button);
+  });
+
+  document.querySelectorAll('[id^="' + group + '-"].demo-tab-panel').forEach(panel => {
+    panel.classList.toggle("active", panel.id === target);
+  });
+});
+</script>
+<script>
+document.addEventListener("click", function(event) {
+  const button = event.target.closest(".security-tab-btn");
+  if (!button) return;
+  const target = button.getAttribute("data-security-target");
+
+  document.querySelectorAll(".security-tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn === button);
+  });
+
+  document.querySelectorAll(".security-tab-panel").forEach(panel => {
+    panel.classList.toggle("active", panel.id === target);
+  });
+});
+</script>
+
+<script>
+document.addEventListener("click", function(event) {
+  const button = event.target.closest(".crm-tab-btn");
+  if (!button) return;
+  const section = button.closest("#crm-connectivity");
+  if (!section) return;
+  const target = button.getAttribute("data-crm-target");
+  section.querySelectorAll(".crm-tab-btn").forEach(btn => btn.classList.toggle("active", btn === button));
+  section.querySelectorAll(".crm-tab-panel").forEach(panel => panel.classList.toggle("active", panel.id === target));
+});
+</script>
+</body>
+</html>
