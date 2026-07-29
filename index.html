@@ -285,6 +285,19 @@ tr:nth-child(even) td{background:#f8fafc}
 @media(max-width:850px){.crm-product-grid{grid-template-columns:1fr}}
 
 .image-frame img[loading="lazy"]{max-height:620px;object-fit:contain;background:#fff}
+
+/* Consistent provider/location selectors */
+.provider-panel.selector-panel{display:grid;grid-template-columns:minmax(150px,1fr) minmax(230px,280px) auto;align-items:center;gap:14px 18px}
+.provider-panel.selector-panel .provider-note{grid-column:1 / -1;margin:0}
+.provider-content-panel[hidden]{display:none!important}
+.provider-content-panel{animation:providerFade .18s ease-out}
+@keyframes providerFade{from{opacity:.35;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(max-width:760px){
+  .provider-panel.selector-panel{grid-template-columns:1fr}
+  .provider-panel.selector-panel .provider-note{grid-column:1}
+  .provider-select{width:100%;min-width:0}
+  .provider-status{justify-self:start}
+}
 </style>
 </head>
 <body>
@@ -298,8 +311,8 @@ tr:nth-child(even) td{background:#f8fafc}
 <section class="page active" id="platform-overview"><div class="section-banner"><strong>1. Architecture &amp; Connectivity</strong><span>Where Cognigy fits, where it runs, how it is built and how it connects.</span></div>
 <div class="provider-panel">
 <label for="ccaasProvider">CCaaS provider</label>
-<select aria-label="Select CCaaS provider" class="provider-select" id="ccaasProvider">
-<option selected="" value="cxone">NiCE CXone</option>
+<select aria-label="Select CCaaS provider" class="provider-select" id="ccaasProvider"><option selected="selected" value="cxone">NiCE CXone</option>
+
 <option value="genesys">Genesys Cloud</option>
 <option value="amazon">Amazon Connect</option>
 <option value="cisco">Cisco Webex Contact Center</option>
@@ -362,83 +375,80 @@ tr:nth-child(even) td{background:#f8fafc}
 <li>Routes the interaction to the appropriate CXone skill and agent</li>
 </ul>
 </div>
-<div class="card"><h4>NiCE CXone / channel platform</h4><ul class="cheat"><li>Voice and digital channel entry</li><li>Routing and queues</li><li>Recording and agent desktop</li><li>Live-agent delivery</li></ul></div><div class="card"><h4>Enterprise</h4><ul class="cheat"><li>Systems of record</li><li>Identity and API policy</li><li>Business rules and data</li><li>Retention requirements</li></ul></div></div><div class="section-faq"><h3>Common questions</h3><details><summary>Does Cognigy replace the contact-centre platform?</summary><div class="answer">No. The CCaaS platform continues to own channels, routing, queues and agent delivery. Cognigy provides the AI orchestration layer.</div></details><details><summary>Does Cognigy replace our CRM or policy platform?</summary><div class="answer">No. Enterprise systems remain the systems of record and are accessed through approved integrations.</div></details><details><summary>Can the same AI Agent be reused across channels?</summary><div class="answer">Yes. Core logic, knowledge and tools can be reused, while channel-specific presentation and routing remain configurable.</div></details></div></section><section class="page" id="component-architecture"><div class="eyebrow">1.2 · Component architecture</div><h2>How Cognigy fits across the wider ecosystem</h2><p class="lead">A single view of channels, CCaaS, Cognigy, AI services, tools and enterprise systems.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is the central orchestration layer connecting channels, AI models, tools and enterprise systems.</li><li>It is model agnostic, so providers can be changed without redesigning the whole application.</li><li>REST APIs, MCP servers, RAG services and custom tools can all be orchestrated by the same AI Agent.</li><li>Channels and backend systems remain decoupled, making the architecture easier to evolve.</li><li>This provides flexibility today while reducing future migration effort.</li></ul></div><div class="visual-tabs"><span class="visual-tab">Channels</span><span class="visual-tab">Genesys</span><span class="visual-tab">Cognigy</span><span class="visual-tab">MCP &amp; AI Tools</span><span class="visual-tab">LLM / Speech</span><span class="visual-tab">Enterprise Systems</span></div><div class="image-frame"><img alt="Cognigy AI orchestration component architecture showing customer channels, MCP and AI tools, model and speech providers, and enterprise systems" class="arch-image" src="images/component-architecture.png"/><div class="image-caption">Use this as the main component view: Cognigy sits at the centre, orchestrating channels, AI services, tools and enterprise systems without replacing them.</div></div><div class="grid"><div class="card"><h4>Channels</h4><ul class="cheat"><li>Voice, web, messaging and mobile</li><li>Typically owned by Genesys or another channel platform</li></ul></div><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI Agents and orchestration</li><li>Knowledge, tools, guardrails and analytics</li></ul></div><div class="card"><h4>Enterprise systems</h4><ul class="cheat"><li>CRM, policy, claims and payments</li><li>Remain the systems of record</li></ul></div><div class="card"><h4>AI services</h4><ul class="cheat"><li>LLM and speech providers</li><li>Provider-agnostic and selected by architecture</li></ul></div></div><div class="quote">“Cognigy connects the existing estate into a controlled, reusable AI orchestration layer.”</div><div class="section-faq"><h3>Common questions</h3><details><summary>Can we use different LLM or speech providers?</summary><div class="answer">Yes. Cognigy is provider-agnostic and can orchestrate approved LLM and speech services.</div></details><details><summary>Can Cognigy use REST APIs, MCP and custom tools together?</summary><div class="answer">Yes. These can be exposed as governed tools within the same orchestration layer.</div></details><details><summary>Do enterprise systems need to change?</summary><div class="answer">Not necessarily. Cognigy is designed to integrate with the existing estate through approved interfaces.</div></details></div></section><section class="page" id="hosting-platform">
+<div class="card"><h4>NiCE CXone / channel platform</h4><ul class="cheat"><li>Voice and digital channel entry</li><li>Routing and queues</li><li>Recording and agent desktop</li><li>Live-agent delivery</li></ul></div><div class="card"><h4>Enterprise</h4><ul class="cheat"><li>Systems of record</li><li>Identity and API policy</li><li>Business rules and data</li><li>Retention requirements</li></ul></div></div><div class="section-faq"><h3>Common questions</h3><details><summary>Does Cognigy replace the contact-centre platform?</summary><div class="answer">No. The CCaaS platform continues to own channels, routing, queues and agent delivery. Cognigy provides the AI orchestration layer.</div></details><details><summary>Does Cognigy replace our CRM or policy platform?</summary><div class="answer">No. Enterprise systems remain the systems of record and are accessed through approved integrations.</div></details><details><summary>Can the same AI Agent be reused across channels?</summary><div class="answer">Yes. Core logic, knowledge and tools can be reused, while channel-specific presentation and routing remain configurable.</div></details></div></section><section class="page" id="component-architecture"><div class="eyebrow">1.2 · Component architecture</div><h2>How Cognigy fits across the wider ecosystem</h2><p class="lead">A single view of channels, CCaaS, Cognigy, AI services, tools and enterprise systems.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is the central orchestration layer connecting channels, AI models, tools and enterprise systems.</li><li>It is model agnostic, so providers can be changed without redesigning the whole application.</li><li>REST APIs, MCP servers, RAG services and custom tools can all be orchestrated by the same AI Agent.</li><li>Channels and backend systems remain decoupled, making the architecture easier to evolve.</li><li>This provides flexibility today while reducing future migration effort.</li></ul></div><div class="visual-tabs"><span class="visual-tab">Channels</span><span class="visual-tab" id="componentCcaasTab">NiCE CXone</span><span class="visual-tab">Cognigy</span><span class="visual-tab">MCP &amp; AI Tools</span><span class="visual-tab">LLM / Speech</span><span class="visual-tab">Enterprise Systems</span></div><div class="image-frame"><img alt="Cognigy AI orchestration component architecture showing customer channels, MCP and AI tools, model and speech providers, and enterprise systems" class="arch-image" src="images/component-architecture.png"/><div class="image-caption">Use this as the main component view: Cognigy sits at the centre, orchestrating channels, AI services, tools and enterprise systems without replacing them.</div></div><div class="grid"><div class="card"><h4>Channels</h4><ul class="cheat"><li>Voice, web, messaging and mobile</li><li>Typically owned by the selected CCaaS or channel platform</li></ul></div><div class="card"><h4>Cognigy</h4><ul class="cheat"><li>AI Agents and orchestration</li><li>Knowledge, tools, guardrails and analytics</li></ul></div><div class="card"><h4>Enterprise systems</h4><ul class="cheat"><li>CRM, policy, claims and payments</li><li>Remain the systems of record</li></ul></div><div class="card"><h4>AI services</h4><ul class="cheat"><li>LLM and speech providers</li><li>Provider-agnostic and selected by architecture</li></ul></div></div><div class="quote">“Cognigy connects the existing estate into a controlled, reusable AI orchestration layer.”</div><div class="section-faq"><h3>Common questions</h3><details><summary>Can we use different LLM or speech providers?</summary><div class="answer">Yes. Cognigy is provider-agnostic and can orchestrate approved LLM and speech services.</div></details><details><summary>Can Cognigy use REST APIs, MCP and custom tools together?</summary><div class="answer">Yes. These can be exposed as governed tools within the same orchestration layer.</div></details><details><summary>Do enterprise systems need to change?</summary><div class="answer">Not necessarily. Cognigy is designed to integrate with the existing estate through approved interfaces.</div></details></div></section><section class="page" id="hosting-platform">
 <div class="eyebrow">1.3 · Hosting, resilience &amp; data residency</div>
-<h2>How Cognigy is hosted and operated</h2>
-<p class="section-kicker">A concise view of the SaaS deployment model, operational responsibility, resilience and regional considerations.</p><div class="presenter-cheat"><h3>Presenter cheat sheet</h3><ul><li>Cognigy is delivered as a fully managed SaaS platform hosted in NiCE-managed AWS.</li><li>Kubernetes and independently deployable services provide scalability, resilience and rolling upgrades.</li><li>For a typical UK deployment, London is the primary region and Ireland is the paired backup region; the contracted topology must be confirmed.</li><li>The design environment is separated from the live runtime, so new versions can be prepared without disrupting active conversations.</li><li>NiCE manages the platform; the customer manages AI configuration, integrations and business data.</li><li>South Africa is available as the ZA1 deployment region for AI Agents (Cognigy); NiCE also operates a locally hosted CXone instance with South African data residency.</li></ul></div>
-<div class="image-frame">
-<img alt="Cognigy SaaS hosting architecture in NiCE-managed AWS" class="arch-image" src="images/saas-hosting-architecture.png"/>
-<div class="image-caption">Illustrative reference architecture. Actual topology depends on the contracted service and deployment model.</div>
+<h2 id="hostingPageTitle">How Cognigy is hosted in the United Kingdom</h2>
+<p class="section-kicker" id="hostingPageKicker">Select a deployment location to view the relevant regional architecture, resilience and data-residency guidance.</p>
+<div class="provider-panel selector-panel">
+<label for="hostingLocation">Hosting location</label>
+<select aria-label="Select hosting location" class="provider-select" id="hostingLocation">
+<option selected="" value="uk">United Kingdom</option>
+<option value="south-africa">South Africa</option>
+</select>
+<span class="provider-status" id="hostingStatus">Regional guidance</span>
+<div class="provider-note" id="hostingNote">United Kingdom deployment guidance is shown. Confirm the exact contracted regions, RPO and RTO.</div>
 </div>
+<div class="provider-content-panel" data-hosting-location="uk">
+<div class="presenter-cheat"><h3>United Kingdom presenter cheat sheet</h3><ul>
+<li>Cognigy is delivered as a fully managed SaaS platform hosted in NiCE-managed AWS.</li>
+<li>A typical UK deployment uses AWS Europe (London), eu-west-2, as the primary region.</li>
+<li>Ireland, eu-west-1, is commonly used as the paired backup region; confirm the contracted topology.</li>
+<li>Kubernetes and independently deployable services provide scalability, resilience and rolling upgrades.</li>
+<li>NiCE manages the platform; the customer manages AI configuration, integrations, access policy and business data.</li>
+</ul></div>
+<div class="image-frame"><img alt="Cognigy SaaS hosting architecture in NiCE-managed AWS" class="arch-image" src="images/saas-hosting-architecture.png"/><div class="image-caption">Illustrative UK SaaS reference architecture. The contracted service determines the final primary region, backup region and recovery commitments.</div></div>
 <div class="compact-grid">
-<div class="mini-card status-standard">
-<h4>Standard deployment</h4>
-<ul class="cheat">
-<li>NiCE-managed Cognigy SaaS</li>
-<li>Hosted in AWS</li>
-<li>Kubernetes-based microservices platform</li>
-<li>No new on-premises deployments</li>
-</ul>
+<div class="mini-card status-standard"><h4>Primary region</h4><ul class="cheat"><li><strong>AWS Europe (London)</strong></li><li>Region code: eu-west-2</li><li>Supports UK-aligned regional deployment</li></ul></div>
+<div class="mini-card status-standard"><h4>Paired resilience region</h4><ul class="cheat"><li><strong>AWS Europe (Ireland)</strong></li><li>Region code: eu-west-1</li><li>Confirm replication, failover, RPO and RTO contractually</li></ul></div>
+<div class="mini-card"><h4>NiCE operates</h4><ul class="cheat"><li>AWS infrastructure and Kubernetes</li><li>Patching, upgrades and monitoring</li><li>Scaling, backup and recovery processes</li></ul></div>
+<div class="mini-card"><h4>Customer operates</h4><ul class="cheat"><li>AI Agents, prompts and knowledge</li><li>Business integrations and API policy</li><li>Data classification and retention requirements</li></ul></div>
 </div>
-<div class="mini-card">
-<h4>Example UK deployment</h4>
-<ul class="cheat">
-<li><strong>Primary:</strong> AWS Europe (London), eu-west-2</li>
-<li><strong>Paired backup region:</strong> AWS Europe (Ireland), eu-west-1</li>
-<li>Confirm the exact topology for the contracted environment</li>
-</ul>
+<div class="callout warn"><strong>Architecture checkpoint:</strong> a primary hosting region and a disaster-recovery region are related but separate design questions. Confirm data location, media paths, backups, RPO, RTO and any sovereign-cloud requirements for the contracted service.</div>
+<div class="section-faq"><h3>United Kingdom common questions</h3>
+<details><summary>Where is the typical UK service hosted?</summary><div class="answer">A typical deployment uses AWS Europe (London), eu-west-2. The final region must match the contracted environment.</div></details>
+<details><summary>What is the typical paired backup region?</summary><div class="answer">Ireland, eu-west-1, is commonly paired with London. Replication and failover commitments must be confirmed contractually.</div></details>
+<details><summary>Who operates the platform?</summary><div class="answer">NiCE operates the managed cloud platform. The customer remains responsible for its AI configuration, integrations, permissions and business data.</div></details>
 </div>
-<div class="mini-card">
-<h4>NiCE operates</h4>
-<ul class="cheat">
-<li>AWS infrastructure and Kubernetes</li>
-<li>Patching, upgrades and platform monitoring</li>
-<li>Scaling, backup and disaster-recovery processes</li>
-</ul>
 </div>
-<div class="mini-card">
-<h4>Customer operates</h4>
-<ul class="cheat">
-<li>AI Agents, prompts and knowledge</li>
-<li>Business integrations and API policy</li>
-<li>Data classification and retention requirements</li>
-</ul>
-</div>
-<div class="mini-card status-standard">
-<h4>South Africa deployment</h4>
-<ul class="cheat">
-<li><strong>AI Agents (Cognigy):</strong> available in South Africa region ZA1</li>
-<li><strong>NiCE CXone:</strong> locally hosted dedicated instance</li>
-<li>Local data residency supported for regulated South African deployments</li>
-<li>NiCE states redundant data centres are located in Cape Town and Johannesburg</li>
-<li>Confirm the contracted Cognigy, voice, storage and disaster-recovery topology</li>
-</ul>
-</div></div>
-<div class="callout warn">
-<strong>Architect note:</strong> primary hosting region and disaster-recovery region are related but not identical questions. For a typical UK deployment, London is paired with Ireland; sovereign-cloud or dedicated arrangements may use a different topology or different data centres and must be confirmed.
-</div><div class="callout ok"><strong>South Africa note:</strong> use ZA1 when the contracted AI Agents (Cognigy) service requires South African regional deployment. NiCE has also announced a local CXone instance with core CXone data residency and redundant Cape Town and Johannesburg data centres. Do not assume the precise Cognigy backup region, RPO, RTO, media path or storage topology; validate these against the contracted service.</div>
+<div class="provider-content-panel" data-hosting-location="south-africa" hidden="">
+<div class="presenter-cheat"><h3>South Africa presenter cheat sheet</h3><ul>
+<li>Cognigy is hosted in <strong>AWS South Africa (af-south-1)</strong> for this deployment.</li>
+<li>The Cognigy environment is a <strong>dedicated single-tenant SaaS deployment</strong>, rather than a shared multi-tenant environment.</li>
+<li>The customer-provided LLM is hosted separately from Cognigy and remains part of the customer’s own architecture.</li>
+<li>Cognigy platform residency and LLM inference residency must therefore be assessed separately.</li>
+<li>The separately hosted LLM region, recovery design, RPO and RTO should be confirmed by the customer before the end-to-end residency position is finalised.</li>
+</ul></div>
+<div class="diagram-wrap"><svg aria-label="South Africa Cognigy hosting architecture" role="img" viewBox="0 0 1160 360" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="saArrow" markerHeight="8" markerWidth="8" orient="auto" refX="7" refY="4"><path d="M0,0 L8,4 L0,8 z" fill="#173f66"></path></marker></defs>
+<rect fill="#eef5fb" height="250" rx="18" stroke="#b9cfe2" width="250" x="35" y="55"></rect>
+<text class="svg-title" text-anchor="middle" x="160" y="95">Customer Channels</text>
+<text class="svg-label" text-anchor="middle" x="160" y="145">Voice</text><text class="svg-label" text-anchor="middle" x="160" y="185">Webchat</text><text class="svg-label" text-anchor="middle" x="160" y="225">Messaging</text><text class="svg-label" text-anchor="middle" x="160" y="265">Mobile</text>
+<rect fill="#f4f0fb" height="250" rx="18" stroke="#cdbfe8" width="340" x="410" y="55"></rect>
+<text class="svg-title" text-anchor="middle" x="580" y="95">Cognigy AI Agents</text>
+<text class="svg-label" text-anchor="middle" x="580" y="140">AWS South Africa</text><text class="svg-label" text-anchor="middle" x="580" y="178">af-south-1 (Cape Town)</text><text class="svg-label" text-anchor="middle" x="580" y="216">Dedicated single-tenant SaaS</text><text class="svg-small" text-anchor="middle" x="580" y="258">AI orchestration, knowledge and tools</text>
+<rect fill="#eef8f1" height="250" rx="18" stroke="#b9d8c1" width="300" x="825" y="55"></rect>
+<text class="svg-title" text-anchor="middle" x="975" y="95">Customer Architecture</text>
+<text class="svg-label" text-anchor="middle" x="975" y="145">Customer-hosted LLM</text><text class="svg-label" text-anchor="middle" x="975" y="185">Enterprise APIs</text><text class="svg-label" text-anchor="middle" x="975" y="225">Systems of record</text><text class="svg-small" text-anchor="middle" x="975" y="265">Location confirmed separately</text>
+<path d="M285 180 H400" fill="none" marker-end="url(#saArrow)" stroke="#173f66" stroke-width="3"></path>
+<path d="M750 180 H815" fill="none" marker-end="url(#saArrow)" stroke="#173f66" stroke-width="3"></path>
+</svg></div>
 <div class="compact-grid">
-<div class="mini-card status-standard">
-<h4>High availability</h4>
-<ul class="cheat">
-<li>Kubernetes self-healing</li>
-<li>Independent service scaling</li>
-<li>Rolling upgrades</li>
-<li>Managed monitoring and alerting</li>
-</ul>
+<div class="mini-card status-standard"><h4>Cloud and region</h4><ul class="cheat"><li><strong>Amazon Web Services</strong></li><li><strong>af-south-1 (Cape Town)</strong></li><li>South African Cognigy platform hosting</li></ul></div>
+<div class="mini-card status-standard"><h4>Tenancy</h4><ul class="cheat"><li><strong>Dedicated single tenant</strong></li><li>Customer-specific Cognigy environment</li><li>Not a shared SaaS tenant</li></ul></div>
+<div class="mini-card"><h4>Cognigy layer</h4><ul class="cheat"><li>AI Agents and orchestration</li><li>Knowledge, prompts and tools</li><li>Conversation processing within the contracted environment</li></ul></div>
+<div class="mini-card status-validate"><h4>Customer-hosted LLM</h4><ul class="cheat"><li>Hosted separately by the customer</li><li>Not part of the Cognigy hosting boundary</li><li>Region and inference residency require separate confirmation</li></ul></div>
 </div>
-<div class="mini-card status-validate">
-<h4>Confirm during design</h4>
-<ul class="cheat">
-<li>Contracted hosting model</li>
-<li>Primary and paired regions</li>
-<li>RPO and RTO commitments</li>
-<li>Sovereign-cloud requirements</li>
-<li>Data-residency obligations</li>
-</ul>
+<div class="callout ok"><strong>Confirmed South Africa position:</strong> the Cognigy platform is hosted in AWS South Africa, af-south-1, as a dedicated single-tenant SaaS environment. The customer-provided LLM is hosted separately, so its location and any cross-region inference behaviour must be confirmed independently.</div>
+<div class="callout warn"><strong>Architecture checkpoint:</strong> confirming Cognigy in af-south-1 establishes the platform-hosting position, but it does not by itself confirm the residency of the customer-managed LLM, speech services, enterprise integrations, backups or disaster-recovery services.</div>
+<div class="section-faq"><h3>South Africa common questions</h3>
+<details><summary>Where is Cognigy hosted for the South African deployment?</summary><div class="answer">Cognigy is hosted in Amazon Web Services South Africa, region af-south-1 in Cape Town.</div></details>
+<details><summary>Is the Cognigy environment shared with other customers?</summary><div class="answer">No. The confirmed deployment is a dedicated single-tenant SaaS environment.</div></details>
+<details><summary>Is the customer’s LLM hosted by Cognigy?</summary><div class="answer">No. The customer-provided LLM is hosted separately within the customer’s own architecture and connected securely to Cognigy.</div></details>
+<details><summary>Does this confirm that all AI processing remains in South Africa?</summary><div class="answer">It confirms the Cognigy platform location. The LLM deployment region, inference routing, speech services, integrations, backups and recovery locations must be confirmed separately to establish the complete end-to-end residency position.</div></details>
+<details><summary>What still needs contractual confirmation?</summary><div class="answer">Confirm the customer-managed LLM location, any cross-region inference behaviour, backup and recovery locations, and the agreed RPO and RTO.</div></details>
 </div>
 </div>
-<div class="section-faq"><h3>Common questions</h3><details><summary>Where is Cognigy hosted?</summary><div class="answer">Cognigy is delivered as a NiCE-managed SaaS platform in AWS. The exact primary and backup topology depends on the contracted environment.</div></details><details><summary>What is the typical UK regional model?</summary><div class="answer">A typical UK deployment uses AWS Europe (London), eu-west-2, with Ireland, eu-west-1, as the paired backup region. This must be confirmed for the specific service.</div></details><details><summary>Who operates the platform?</summary><div class="answer">NiCE operates the cloud, Kubernetes and platform services. The customer operates its AI configuration, integrations and business data.</div></details><details><summary>Is Cognigy available in South Africa?</summary><div class="answer">Yes. AI Agents (Cognigy) is available in the South Africa ZA1 region. NiCE also operates a locally hosted CXone instance in South Africa. The exact Cognigy, CXone, voice, storage and disaster-recovery topology should be confirmed for the contracted service.</div></details></div></section>
+</section>
 <section class="page" id="genesys">
 <div class="eyebrow">2 · CCaaS integration</div>
 <h2 id="providerIntegrationTitle">CCaaS integration</h2>
@@ -986,7 +996,12 @@ tr:nth-child(even) td{background:#f8fafc}
 </div>
 </section><section class="page" id="crm-connectivity">
 <div class="eyebrow">5 · Enterprise CRM connectivity</div><h2>Enterprise CRM connectivity</h2><p class="section-kicker">Select the CRM platform to view its native data model, authentication, integration patterns and agent-workspace considerations.</p>
-<div class="provider-picker"><label for="crmProvider"><strong>CRM provider</strong></label><select id="crmProvider"><option value="dynamics">Microsoft Dynamics 365</option><option value="salesforce">Salesforce</option></select><span class="provider-status">Provider-specific guidance</span></div>
+<div class="provider-panel selector-panel">
+<label for="crmProvider">CRM provider</label>
+<select aria-label="Select CRM provider" class="provider-select" id="crmProvider"><option selected="" value="dynamics">Microsoft Dynamics 365</option><option value="salesforce">Salesforce</option></select>
+<span class="provider-status" id="crmProviderStatus">Provider-specific guidance</span>
+<div class="provider-note" id="crmProviderNote">Microsoft Dynamics 365-specific Dataverse, authentication and Customer Service guidance is shown.</div>
+</div>
 <div class="crm-provider-panel" data-crm-provider="dynamics">
 <div class="section-banner"><strong>Microsoft Dynamics 365</strong><span>Dataverse, Customer Service, Omnichannel, Power Platform and Cognigy Extension/API patterns.</span></div>
 <div class="crm-flow"><div class="step">Customer</div><div class="arrow">→</div><div class="step">Cognigy AI Agent</div><div class="arrow">→</div><div class="step">Dynamics 365 / Dataverse</div><div class="arrow">→</div><div class="step">Customer Service workspace</div></div>
@@ -1226,58 +1241,52 @@ tr:nth-child(even) td{background:#f8fafc}
 </div><div class="section-faq"><h3>Common questions</h3><details><summary>What is the difference between Insights and Cognigy Agentic Analytics?</summary><div class="answer">Insights focuses on operational usage and engagement. Cognigy Agentic Analytics evaluates conversation quality, topics, escalation, resolution and custom criteria.</div></details><details><summary>Can analysis target a specific Agent version?</summary><div class="answer">Yes. Analysis can be scheduled and filtered by endpoint, channel, snapshot or Agent version.</div></details><details><summary>Can the data be exported to enterprise BI?</summary><div class="answer">Yes. Cognigy provides APIs so analytics can be combined with wider business reporting.</div></details></div></section><section class="page" id="demo-simulator">
 <div class="eyebrow">7.3 · Demo guide</div>
 <h2>Cognigy Simulator</h2>
-<p class="section-kicker">Use the tabs below to move between scenario design, scale testing and results without scrolling through one long page.</p>
+<p class="section-kicker">Use Cognigy Simulator to validate AI Agent behaviour before release and to retest it whenever prompts, knowledge, tools, models or Snapshots change.</p>
 <details class="collapsible-note" open="">
 <summary>Presenter cheat sheet</summary>
 <div class="collapsible-body">
 <ul>
-<li>Agentic AI creates thousands of possible outcomes, making traditional manual UAT impractical.</li>
-<li>Cognigy Simulator creates realistic tests using personas, missions and measurable success criteria.</li>
-<li>Scenarios can be created manually, from transcripts or from the AI Agent prompt.</li>
-<li>Large volumes of simulated conversations can test edge cases and regressions quickly.</li>
-<li>The outcome is repeatable automated QA as prompts, knowledge, tools or models change.</li>
+<li>Agentic AI creates many possible conversation paths, making manual testing alone difficult to scale.</li>
+<li>Cognigy Simulator runs realistic conversations using personas, missions and measurable success criteria.</li>
+<li>Use it for UAT, regression testing, model comparison and validation of new AI Agent versions.</li>
+<li>Snapshots provide versioned, deployable states of the AI Agent, so teams can test a specific Snapshot before promoting it.</li>
+<li>Results show which criteria passed or failed and let teams inspect the underlying simulated conversation.</li>
 </ul>
 </div>
 </details>
 <div class="demo-intro">
-<h3>Opening narrative</h3>
-<p>“With traditional bots, testers validated a limited number of predefined paths. Agentic AI can reason, adapt and call tools, so testing every possible outcome manually is no longer practical.”</p>
+<h3>Why use Cognigy Simulator?</h3>
+<div class="grid-2">
+<div class="mini-card"><h4>User acceptance testing</h4><p>Validate that the AI Agent completes the intended customer journeys and meets agreed business criteria before release.</p></div>
+<div class="mini-card"><h4>Regression testing</h4><p>Repeat the same scenarios after changing prompts, tools, knowledge or flow logic to confirm that existing behaviour has not degraded.</p></div>
+<div class="mini-card"><h4>Model comparison</h4><p>Run equivalent scenarios against different supported LLMs or model configurations and compare success, consistency and conversation quality.</p></div>
+<div class="mini-card"><h4>Snapshot and release validation</h4><p>Test a specific Cognigy Snapshot as the versioned release candidate, then rerun the test suite when a new Snapshot is created.</p></div>
+<div class="mini-card"><h4>Edge-case coverage</h4><p>Generate variations in wording, behaviour and conversation paths that are difficult to cover consistently through manual testing.</p></div>
+<div class="mini-card"><h4>Continuous quality assurance</h4><p>Run a repeatable suite on a regular cadence to identify quality drift as models, knowledge sources and external services evolve.</p></div>
 </div>
-<div class="demo-tabs" role="tablist"><button class="demo-tab-btn active" data-demo-group="simulator" data-demo-target="simulator-0" type="button">1. Scenario Design</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-1" type="button">2. Run at Scale</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-2" type="button">3. Results &amp; Failures</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-3" type="button">4. Closing</button></div><div class="demo-tab-panel active" id="simulator-0">
+</div>
+<div class="demo-tabs" role="tablist"><button class="demo-tab-btn active" data-demo-group="simulator" data-demo-target="simulator-0" type="button">1. Configure Test</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-1" type="button">2. Run at Scale</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-2" type="button">3. Analyse Results</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-3" type="button">4. Closing</button></div><div class="demo-tab-panel active" id="simulator-0">
 <div class="screen-frame">
-<img alt="Cognigy Simulator scenario editor" src="images/simulator-scenario-editor.png"/>
-<div class="screen-caption">Scenario Editor: define the persona, mission and success criteria used to judge the AI Agent.</div>
-</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how realistic customer scenarios and measurable test criteria are created.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>The persona defines how the simulated customer behaves, while the mission defines what they are trying to achieve.</li><li>Success criteria describe exactly how the AI Agent should be judged.</li><li>Scenarios can be built manually, from transcripts or from the Agent prompt.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy Simulator tests realistic customer behaviour against business-defined success criteria.</p></div></div>
-<details class="demo-question">
-<summary>Question: How do we create realistic tests?</summary>
-<div class="demo-question-body"><ul><li>Create scenarios manually, from transcripts or from the AI Agent prompt.</li><li>Define personality traits and expected customer behaviour.</li><li>Define the mission and measurable success criteria.</li></ul></div>
-</details>
+<img alt="Cognigy Simulator start simulation configuration" src="images/Sim_Run_1.png"/>
+<div class="screen-caption">Start Simulation: select the Flow, optional Snapshot, locale, LLM and number of simulation runs.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show that the test can target a specific configuration and release candidate.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Select the relevant Flow and locale for the use case.</li><li>Select a Snapshot when testing a specific versioned state of the AI Agent; use No Snapshot when testing the current working configuration.</li><li>Select the LLM to validate the deployed model or compare alternatives.</li><li>Choose the number of runs to create enough variation for meaningful evaluation.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>The same test suite can be repeated against different Snapshots, models and configurations.</p></div></div>
 </div><div class="demo-tab-panel" id="simulator-1">
 <div class="screen-frame">
-<img alt="Cognigy Simulator run dashboard" src="images/simulator-run-dashboard.png"/>
-<div class="screen-caption">Simulation run overview showing success rate, criteria achieved, sentiment, average turns and individual runs.</div>
-</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Demonstrate automated testing at a scale that manual UAT cannot achieve.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Multiple conversations can be run simultaneously against the same scenario.</li><li>This produces evidence across different responses, edge cases and reasoning paths.</li><li>Testing can be repeated whenever prompts, models, tools or knowledge change.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Automated simulation turns large-scale UAT into a repeatable process.</p></div></div>
+<img alt="Cognigy Simulator scenario editor" src="images/simulator-scenario-editor.png"/>
+<div class="screen-caption">Define the simulated customer persona, mission and measurable success criteria before running conversations at scale.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Demonstrate automated testing at a scale that manual UAT cannot achieve.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>The persona controls how the simulated customer behaves.</li><li>The mission defines what the customer is trying to achieve.</li><li>Success criteria define the expected business and conversational outcomes.</li><li>Multiple runs introduce realistic variation across wording, reasoning paths and edge cases.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy Simulator turns repeatable UAT and regression testing into an automated process.</p></div></div>
 </div><div class="demo-tab-panel" id="simulator-2">
 <div class="screen-frame">
-<img alt="Cognigy Simulator success criteria results" src="images/simulator-success-criteria-results.png"/>
-<div class="screen-caption">Results view showing criteria performance, turn distribution and pass/fail status across each simulation run.</div>
-</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how test failures are identified and used to improve the AI Agent.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Results are broken down by success criterion, run status, sentiment and turn count.</li><li>Teams can identify which criteria failed and open the underlying simulated conversation.</li><li>The feedback can then be used to refine prompts, knowledge or tool behaviour.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy Simulator explains where and why an Agent failed, not simply that it failed.</p></div></div>
-<details class="collapsible-note">
-<summary>Alternative results screenshot</summary>
-<div class="collapsible-body">
-<div class="screen-frame">
-<img alt="Alternative Cognigy Simulator results dashboard" src="images/simulator-success-criteria-results.png"/>
-<div class="screen-caption">A second results view can be used where the figures or criteria are more suitable for the customer story.</div>
-</div>
-</div>
-</details>
+<img alt="Cognigy Simulator simulation run results" src="images/Sim_Run_2.png"/>
+<div class="screen-caption">Run-level results show overall success, criteria achieved, sentiment, turn count and the detailed conversation behind each failure.</div>
+</div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how failures are identified, explained and converted into improvement actions.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Compare complete success and individual success-criterion performance across runs.</li><li>Open a failed run to see exactly which criterion was missed and inspect the full conversation.</li><li>Use the evidence to refine prompts, knowledge selection, tool instructions, deterministic logic or the chosen model.</li><li>Rerun the same suite against the updated Snapshot to confirm that the issue is resolved without introducing regressions elsewhere.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy Simulator provides evidence of where and why an AI Agent failed, not simply a pass or fail score.</p></div></div>
 </div><div class="demo-tab-panel" id="simulator-3">
 <div class="demo-close">
 <strong>Closing line</strong>
-“Cognigy Simulator enables automated QA at scale, helping teams validate realistic customer behaviour, edge cases and changes before they affect production interactions.”
+“Cognigy Simulator enables repeatable UAT, regression testing and release validation at scale, helping teams compare models and Snapshots and identify issues before they reach production.”
 </div>
-<div class="screenshot-note"><strong>Suggested flow:</strong> Scenario Design → Run at Scale → Results &amp; Failures → open one failed run and explain what would be changed.</div>
-</div><div class="section-faq"><h3>Common questions</h3><details><summary>How are scenarios created?</summary><div class="answer">They can be created manually, from transcripts or from the AI Agent prompt.</div></details><details><summary>What does Cognigy Simulator evaluate?</summary><div class="answer">It evaluates conversations against defined personas, missions and success criteria.</div></details><details><summary>Why run simulations regularly?</summary><div class="answer">Repeated simulation helps identify regressions when prompts, models, knowledge or tools change.</div></details></div></section><section class="page" id="data">
+<div class="screenshot-note"><strong>Suggested demo flow:</strong> configure a Flow, Snapshot and LLM → explain persona, mission and criteria → run at scale → open one failed result → describe the change → rerun against the next Snapshot.</div>
+</div><div class="section-faq"><h3>Common questions</h3><details><summary>When should we use Cognigy Simulator?</summary><div class="answer">Use it during UAT, before promoting a Snapshot, after changing prompts, knowledge, tools or flows, when comparing LLMs, and as a recurring regression suite.</div></details><details><summary>How do Snapshots relate to testing?</summary><div class="answer">A Snapshot represents a versioned state of the Cognigy solution. Selecting a Snapshot allows the simulation to validate that specific release candidate rather than only the current working configuration.</div></details><details><summary>Can different AI models be compared?</summary><div class="answer">Yes. Equivalent scenarios can be run with different supported LLM selections or configurations so teams can compare success criteria, consistency and conversation behaviour.</div></details><details><summary>What does Cognigy Simulator evaluate?</summary><div class="answer">It evaluates simulated conversations against the configured persona, mission and measurable success criteria, while also exposing sentiment, turns and the full conversation for investigation.</div></details></div></section><section class="page" id="data">
 <div class="eyebrow">8 · InfoSec &amp; data governance</div>
 <h2>InfoSec, data governance and enterprise assurance</h2>
 <p class="section-kicker">Use the tabs below to move between data handling, security architecture, compliance and post-interaction governance.</p>
@@ -1544,6 +1553,8 @@ function updateCcaasProvider(providerKey) {
   const diagramTitle = document.getElementById("providerDiagramTitle");
   const diagramSubtitle = document.getElementById("providerDiagramSubtitle");
   if (diagramTitle) diagramTitle.textContent = provider.name;
+  const componentCcaasTab = document.getElementById("componentCcaasTab");
+  if (componentCcaasTab) componentCcaasTab.textContent = provider.name;
   if (diagramSubtitle) {
     diagramSubtitle.textContent = providerKey === "cxone"
       ? "integrated contact-centre platform"
@@ -1552,12 +1563,12 @@ function updateCcaasProvider(providerKey) {
         : "or another channel platform";
   }
 
-  localStorage.setItem("selectedCcaasProvider", providerKey);
+  localStorage.setItem("selectedCcaasProviderV2", providerKey);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   const selector = document.getElementById("ccaasProvider");
-  const saved = localStorage.getItem("selectedCcaasProvider") || "cxone";
+  const saved = localStorage.getItem("selectedCcaasProviderV2") || "cxone";
   selector.value = ccaasProviders[saved] ? saved : "cxone";
   updateCcaasProvider(selector.value);
   selector.addEventListener("change", event => updateCcaasProvider(event.target.value));
@@ -1613,9 +1624,35 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("[data-crm-provider]").forEach(panel => {
       panel.style.display = panel.getAttribute("data-crm-provider") === value ? "" : "none";
     });
+    const note = document.getElementById("crmProviderNote");
+    if (note) note.textContent = value === "salesforce"
+      ? "Salesforce-specific Service Cloud, object, authentication and Omni-Channel guidance is shown."
+      : "Microsoft Dynamics 365-specific Dataverse, authentication and Customer Service guidance is shown.";
   };
   updateCrmProvider(selector.value);
   selector.addEventListener("change", event => updateCrmProvider(event.target.value));
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const selector = document.getElementById("hostingLocation");
+  if (!selector) return;
+  const title = document.getElementById("hostingPageTitle");
+  const note = document.getElementById("hostingNote");
+  const updateHostingLocation = value => {
+    document.querySelectorAll("[data-hosting-location]").forEach(panel => {
+      panel.hidden = panel.getAttribute("data-hosting-location") !== value;
+    });
+    const isSa = value === "south-africa";
+    if (title) title.textContent = isSa
+      ? "How Cognigy is hosted in South Africa"
+      : "How Cognigy is hosted in the United Kingdom";
+    if (note) note.textContent = isSa
+      ? "South Africa guidance is shown for the dedicated AWS af-south-1 Cognigy deployment. Confirm the separately hosted customer LLM and recovery topology independently."
+      : "United Kingdom deployment guidance is shown. Confirm the exact contracted regions, RPO and RTO.";
+  };
+  updateHostingLocation(selector.value);
+  selector.addEventListener("change", event => updateHostingLocation(event.target.value));
 });
 
 const knowledgeParserSelect = document.getElementById('knowledgeParserSelect');
