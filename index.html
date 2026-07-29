@@ -298,6 +298,28 @@ tr:nth-child(even) td{background:#f8fafc}
   .provider-select{width:100%;min-width:0}
   .provider-status{justify-self:start}
 }
+/* Simulator readability and screenshot sizing */
+#demo-simulator .demo-intro .mini-card{background:#fff;color:var(--text);border-color:#d7e2ec}
+#demo-simulator .demo-intro .mini-card h4{color:var(--navy)}
+#demo-simulator .demo-intro .mini-card p,
+#demo-simulator .demo-intro .mini-card li,
+#demo-simulator .demo-intro .mini-card span{color:var(--text)!important}
+#demo-simulator .simulator-screen-frame{
+  width:100%;max-width:960px;margin:16px auto;padding:14px;background:#f8fafc;
+  border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 24px rgba(16,42,67,.08)
+}
+#demo-simulator .simulator-screen-frame.portrait{max-width:390px}
+#demo-simulator .simulator-screen-frame img{
+  display:block;width:100%;height:auto;max-height:540px;object-fit:contain;
+  margin:0 auto;border-radius:10px;background:#fff
+}
+#demo-simulator .simulator-screen-frame .screen-caption{padding:10px 4px 1px}
+@media(max-width:600px){
+  #demo-simulator .simulator-screen-frame{padding:9px;border-radius:12px}
+  #demo-simulator .simulator-screen-frame.portrait{max-width:330px}
+  #demo-simulator .simulator-screen-frame img{max-height:500px}
+}
+
 </style>
 </head>
 <body>
@@ -1266,17 +1288,17 @@ tr:nth-child(even) td{background:#f8fafc}
 </div>
 </div>
 <div class="demo-tabs" role="tablist"><button class="demo-tab-btn active" data-demo-group="simulator" data-demo-target="simulator-0" type="button">1. Configure Test</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-1" type="button">2. Run at Scale</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-2" type="button">3. Analyse Results</button><button class="demo-tab-btn" data-demo-group="simulator" data-demo-target="simulator-3" type="button">4. Closing</button></div><div class="demo-tab-panel active" id="simulator-0">
-<div class="screen-frame">
+<div class="screen-frame simulator-screen-frame portrait">
 <img alt="Cognigy Simulator start simulation configuration" src="images/Sim_Run_1.png"/>
 <div class="screen-caption">Start Simulation: select the Flow, optional Snapshot, locale, LLM and number of simulation runs.</div>
 </div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show that the test can target a specific configuration and release candidate.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Select the relevant Flow and locale for the use case.</li><li>Select a Snapshot when testing a specific versioned state of the AI Agent; use No Snapshot when testing the current working configuration.</li><li>Select the LLM to validate the deployed model or compare alternatives.</li><li>Choose the number of runs to create enough variation for meaningful evaluation.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>The same test suite can be repeated against different Snapshots, models and configurations.</p></div></div>
 </div><div class="demo-tab-panel" id="simulator-1">
-<div class="screen-frame">
+<div class="screen-frame simulator-screen-frame">
 <img alt="Cognigy Simulator scenario editor" src="images/simulator-scenario-editor.png"/>
 <div class="screen-caption">Define the simulated customer persona, mission and measurable success criteria before running conversations at scale.</div>
 </div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Demonstrate automated testing at a scale that manual UAT cannot achieve.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>The persona controls how the simulated customer behaves.</li><li>The mission defines what the customer is trying to achieve.</li><li>Success criteria define the expected business and conversational outcomes.</li><li>Multiple runs introduce realistic variation across wording, reasoning paths and edge cases.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy Simulator turns repeatable UAT and regression testing into an automated process.</p></div></div>
 </div><div class="demo-tab-panel" id="simulator-2">
-<div class="screen-frame">
+<div class="screen-frame simulator-screen-frame">
 <img alt="Cognigy Simulator simulation run results" src="images/Sim_Run_2.png"/>
 <div class="screen-caption">Run-level results show overall success, criteria achieved, sentiment, turn count and the detailed conversation behind each failure.</div>
 </div><div class="tab-talk-track"><div class="talk-block objective"><h4>Objective</h4><p>Show how failures are identified, explained and converted into improvement actions.</p></div><div class="talk-block track"><h4>Talk track</h4><ul><li>Compare complete success and individual success-criterion performance across runs.</li><li>Open a failed run to see exactly which criterion was missed and inspect the full conversation.</li><li>Use the evidence to refine prompts, knowledge selection, tool instructions, deterministic logic or the chosen model.</li><li>Rerun the same suite against the updated Snapshot to confirm that the issue is resolved without introducing regressions elsewhere.</li></ul></div><div class="talk-block takeaway"><h4>Key takeaway</h4><p>Cognigy Simulator provides evidence of where and why an AI Agent failed, not simply a pass or fail score.</p></div></div>
